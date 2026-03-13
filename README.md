@@ -47,10 +47,12 @@ Database (MySQL + Sequelize)
 
 ## 🛠 Tech Stack
 
-**Backend**
+**Backend & Frontend Technologies**
 - Node.js
 - Express.js
 - GraphQL
+- React
+- Socket.io
 
 **Database**
 - MySQL
