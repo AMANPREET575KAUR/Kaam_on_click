@@ -13,7 +13,8 @@ const { sequelize } = require("./models");
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+// Allow larger GraphQL JSON bodies (for base64 profile pictures)
+app.use(express.json({ limit: "5mb" }));
 
 const ensureUserRoleCompositeUnique = async () => {
   const queryInterface = sequelize.getQueryInterface();
