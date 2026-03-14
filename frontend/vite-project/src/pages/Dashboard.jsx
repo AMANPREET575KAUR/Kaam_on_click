@@ -3,7 +3,7 @@ import axios from "axios";
 import config from "../config";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../layout/DashboardLayout";
-import { Briefcase, DollarSign, Check, Clock, Plus, Eye, TrendingUp, ArrowRight, MapPin, Loader2, CheckCircle, Sparkles, Zap, Star } from "lucide-react";
+import { Briefcase, DollarSign, Check, Clock, Plus, Eye, TrendingUp, ArrowRight, MapPin, Loader2, CheckCircle, Sparkles, Zap, Star, Gavel } from "lucide-react";
 import { motion } from "framer-motion";
 
 function Dashboard() {

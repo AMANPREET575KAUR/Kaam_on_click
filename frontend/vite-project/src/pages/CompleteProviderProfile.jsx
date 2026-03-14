@@ -29,7 +29,7 @@ function CompleteProviderProfile() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    if (file.size > 2 * 1024 * 1024) { setError("Image must be less than 2MB"); return; }
+       if (file.size > 5 * 1024 * 1024) { setError("Image must be less than 5MB"); return; }
     const reader = new FileReader();
     reader.onloadend = () => setProfilePicture(reader.result);
     reader.readAsDataURL(file);

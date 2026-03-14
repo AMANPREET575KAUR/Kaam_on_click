@@ -19,6 +19,12 @@ function ProviderProfile() {
     description: "",
   });
 
+  const formatReviewDate = (createdAt) => {
+    if (!createdAt) return "";
+    const date = new Date(createdAt);
+    return Number.isNaN(date.getTime()) ? "" : date.toLocaleDateString();
+  };
+
   const fetchProfile = async () => {
     const userId = Number(localStorage.getItem("userId"));
     const token = localStorage.getItem("token");
@@ -45,7 +51,6 @@ function ProviderProfile() {
           rating
           totalReviews
           profilePicture
-          language
         }
       }
       providerReviews(providerId: ${userId}) {
@@ -302,9 +307,7 @@ function ProviderProfile() {
 
                     <div className="flex justify-between mb-2">
                       <span className="text-xs">{review.jobServiceType}</span>
-                      <span className="text-xs">
-                        {new Date(Number(review.createdAt)).toLocaleDateString()}
-                      </span>
+                      <span className="text-xs">{formatReviewDate(review.createdAt)}</span>
                     </div>
 
                     <div className="flex gap-1 mb-2">

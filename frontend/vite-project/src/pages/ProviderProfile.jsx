@@ -6,33 +6,82 @@ import { User, Briefcase, MapPin, Star, Award, Edit2, MessageSquare, ShieldCheck
 import { motion, AnimatePresence } from "framer-motion";
 
 function ProviderProfile() {
-  const [profile, setProfile] = useState(null);
-  const [reviews, setReviews] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({ name: "", phone: "", state: "", city: "", services: "", experienceYears: 0, description: "" });
+   const [profile, setProfile] = useState(null);
+   const [reviews, setReviews] = useState([]);
+   const [isLoading, setIsLoading] = useState(true);
+   const [isEditing, setIsEditing] = useState(false);
+   const [errorMessage, setErrorMessage] = useState("");
+   const [formData, setFormData] = useState({ name: "", phone: "", state: "", city: "", services: "", experienceYears: 0, description: "", profilePicture: "" });
 
-  const fetchProfile = async () => {
-    const userId = localStorage.getItem("userId");
-    const token = localStorage.getItem("token");
-    const query = `{
-      providerProfile(userId: ${userId}) {
-        id name email phone state
-        profile { services experienceYears description city rating totalReviews profilePicture language }
+   const formatReviewDate = (createdAt) => {
+      if (!createdAt) return "";
+      const date = new Date(createdAt);
+      return Number.isNaN(date.getTime()) ? "" : date.toLocaleDateString();
+   };
+
+   const fetchProfile = async () => {
+      const userId = localStorage.getItem("userId");
+      const token = localStorage.getItem("token");
+
+      if (!userId || !token) {
+         console.warn("Missing userId or token for provider profile");
+         setIsLoading(false);
+         setProfile(null);
+         setErrorMessage("You must be logged in as a provider to view this profile.");
+         return;
       }
+    const query = `{
+         providerProfile(userId: ${userId}) {
+            id name email phone state
+            profile { services experienceYears description city rating totalReviews profilePicture }
+         }
       providerReviews(providerId: ${userId}) { id rating comment jobServiceType createdAt }
     }`;
-    try {
-      const res = await axios.post(config.API_URL, { query }, { headers: { authorization: token } });
-      setProfile(res.data.data.providerProfile);
-      setReviews(res.data.data.providerReviews || []);
-      const p = res.data.data.providerProfile;
-      setFormData({
-        name: p.name, phone: p.phone, state: p.state, city: p.profile?.city || "",
-        services: p.profile?.services || "", experienceYears: p.profile?.experienceYears || 0,
-        description: p.profile?.description || "",
-      });
-    } catch (error) { console.log(error); } finally { setIsLoading(false); }
+      try {
+         const res = await axios.post(config.API_URL, { query }, { headers: { authorization: token } });
+
+         if (res.data?.errors?.length) {
+            const msg = res.data.errors[0]?.message || "Unable to load provider profile.";
+            console.error("GraphQL providerProfile error:", msg);
+            setErrorMessage(msg);
+            setProfile(null);
+            setReviews([]);
+            return;
+         }
+
+         const providerProfile = res.data?.data?.providerProfile || null;
+         const providerReviews = res.data?.data?.providerReviews || [];
+
+         if (!providerProfile) {
+            console.warn("Provider profile not found in response");
+            setErrorMessage("Provider profile not found. Make sure you are logged in as a provider and have completed your profile.");
+            setProfile(null);
+            setReviews([]);
+            return;
+         }
+
+         setProfile(providerProfile);
+         setReviews(providerReviews);
+
+         setFormData({
+            name: providerProfile.name,
+            phone: providerProfile.phone,
+            state: providerProfile.state,
+            city: providerProfile.profile?.city || "",
+            services: providerProfile.profile?.services || "",
+            experienceYears: providerProfile.profile?.experienceYears || 0,
+            description: providerProfile.profile?.description || "",
+            profilePicture: providerProfile.profile?.profilePicture || "",
+         });
+      } catch (error) {
+         const msg = error.response?.data?.errors?.[0]?.message || error.message || "Unable to load provider profile.";
+         console.error("Error fetching provider profile:", msg);
+         setErrorMessage(msg);
+         setProfile(null);
+         setReviews([]);
+      } finally {
+         setIsLoading(false);
+      }
   };
 
   useEffect(() => { fetchProfile(); }, []);
@@ -42,20 +91,34 @@ function ProviderProfile() {
     setFormData({ ...formData, [name]: name === "experienceYears" ? parseInt(value) : value });
   };
 
-  const handleSaveChanges = async () => {
-    const token = localStorage.getItem("token");
-    const query = `mutation {
-      updateProviderProfile(
-        name:"${formData.name}", phone:"${formData.phone}", state:"${formData.state}", city:"${formData.city}",
-        services:"${formData.services}", experienceYears:${formData.experienceYears}, description:"${formData.description.replace(/"/g, '\\"')}"
-      ){ id name phone state }
-    }`;
-    try {
-      await axios.post(config.API_URL, { query }, { headers: { authorization: token } });
-      setProfile({ ...profile, name: formData.name, phone: formData.phone, state: formData.state, profile: { ...profile.profile, city: formData.city, services: formData.services, experienceYears: formData.experienceYears, description: formData.description } });
-      setIsEditing(false);
-    } catch (error) { alert("Failed to update profile."); }
-  };
+   const handleSaveChanges = async () => {
+      const token = localStorage.getItem("token");
+      const query = `mutation {
+         updateProviderProfile(
+            name:"${formData.name}", phone:"${formData.phone}", state:"${formData.state}", city:"${formData.city}",
+            services:"${formData.services}", experienceYears:${formData.experienceYears}, description:"${formData.description.replace(/"/g, '\\"')}",
+            profilePicture:"${formData.profilePicture || ""}"
+         ){ id name phone state }
+      }`;
+      try {
+         await axios.post(config.API_URL, { query }, { headers: { authorization: token } });
+         setProfile({
+            ...profile,
+            name: formData.name,
+            phone: formData.phone,
+            state: formData.state,
+            profile: {
+               ...profile.profile,
+               city: formData.city,
+               services: formData.services,
+               experienceYears: formData.experienceYears,
+               description: formData.description,
+               profilePicture: formData.profilePicture || profile.profile?.profilePicture,
+            }
+         });
+         setIsEditing(false);
+      } catch (error) { alert("Failed to update profile."); }
+   };
 
   if (isLoading) {
     return (
@@ -68,7 +131,20 @@ function ProviderProfile() {
     );
   }
 
-  const services = profile.profile?.services?.split(",") || [];
+   if (!profile) {
+      return (
+         <DashboardLayout>
+            <div className="flex flex-col items-center justify-center h-[60vh] space-y-3">
+               <p className="text-slate-900 font-bold text-lg">Provider profile not available</p>
+               <p className="text-slate-500 text-sm max-w-md text-center">
+                  {errorMessage || "This can happen if your profile is not completed yet or if there was a problem loading it. Try completing your profile first and then refresh this page."}
+               </p>
+            </div>
+         </DashboardLayout>
+      );
+   }
+
+   const services = profile.profile?.services?.split(",") || [];
 
   return (
     <DashboardLayout>
@@ -166,11 +242,46 @@ function ProviderProfile() {
           <div className="lg:col-span-8">
              <AnimatePresence mode="wait">
                 {isEditing ? (
-                  <motion.div 
-                    key="edit" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }}
-                    className="bg-white rounded-[3rem] border border-slate-100 p-10 lg:p-14 shadow-premium space-y-10"
-                  >
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                           <motion.div 
+                              key="edit" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }}
+                              className="bg-white rounded-[3rem] border border-slate-100 p-10 lg:p-14 shadow-premium space-y-10"
+                           >
+                               {/* Avatar + Photo Upload */}
+                               <div className="flex items-center gap-6">
+                                    <div className="w-20 h-20 rounded-3xl bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200">
+                                       {formData.profilePicture ? (
+                                          <img src={formData.profilePicture} alt="" className="w-full h-full object-cover" />
+                                       ) : (
+                                          <span className="text-slate-500 font-black text-2xl">
+                                             {profile.name.charAt(0)}
+                                          </span>
+                                       )}
+                                    </div>
+                                    <label className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-950 text-white rounded-2xl text-xs font-black uppercase tracking-widest cursor-pointer">
+                                       <Camera size={14} />
+                                       <span>Update Portrait</span>
+                                       <input
+                                          type="file"
+                                          accept="image/*"
+                                          className="hidden"
+                                          onChange={(e) => {
+                                             const file = e.target.files?.[0];
+                                             if (!file) return;
+                                             if (file.size > 5 * 1024 * 1024) {
+                                                alert("Image must be less than 5MB");
+                                                return;
+                                             }
+                                             const reader = new FileReader();
+                                             reader.onloadend = () => {
+                                                setFormData((prev) => ({ ...prev, profilePicture: reader.result }));
+                                             };
+                                             reader.readAsDataURL(file);
+                                          }}
+                                       />
+                                    </label>
+                               </div>
+
+                               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-2">
                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Legal Name</label>
                            <input
@@ -198,6 +309,20 @@ function ProviderProfile() {
                              type="text" name="services" value={formData.services} onChange={handleInputChange}
                              className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all shadow-inner"
                            />
+                                     </div>
+                                     <div className="space-y-2">
+                                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Operating State</label>
+                                          <input
+                                             type="text" name="state" value={formData.state} onChange={handleInputChange}
+                                             className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all shadow-inner"
+                                          />
+                                     </div>
+                                     <div className="space-y-2">
+                                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Experience Years</label>
+                                          <input
+                                             type="number" min="0" name="experienceYears" value={formData.experienceYears} onChange={handleInputChange}
+                                             className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all shadow-inner"
+                                          />
                         </div>
                      </div>
                      <div className="space-y-2">
@@ -293,7 +418,7 @@ function ProviderProfile() {
                                    <div className="flex-1">
                                       <div className="flex items-center gap-3 mb-2">
                                          <span className="px-2 py-0.5 bg-slate-900 text-white rounded text-[8px] font-black uppercase tracking-widest">{review.jobServiceType}</span>
-                                         <span className="text-[10px] font-bold text-slate-300 uppercase">{new Date(Number(review.createdAt)).toLocaleDateString()}</span>
+                                         <span className="text-[10px] font-bold text-slate-300 uppercase">{formatReviewDate(review.createdAt)}</span>
                                       </div>
                                       <p className="text-sm font-medium text-slate-600 italic">"{review.comment}"</p>
                                    </div>
