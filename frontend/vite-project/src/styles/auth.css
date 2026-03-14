@@ -1,0 +1,167 @@
+.auth-wrapper{
+ display:flex;
+ height:100vh;
+ font-family:Inter,system-ui;
+}
+
+/* LEFT PANEL */
+
+.auth-left{
+ flex:1;
+ background:linear-gradient(135deg,#09090b,#18181b,#020617);
+ background-size:300% 300%;
+ animation:gradientMove 8s ease infinite;
+ color:white;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:60px;
+}
+
+@keyframes gradientMove{
+ 0%{background-position:0% 50%}
+ 50%{background-position:100% 50%}
+ 100%{background-position:0% 50%}
+}
+
+.brand-box{
+ max-width:420px;
+}
+
+.brand-title{
+ font-size:44px;
+ font-weight:800;
+ margin-bottom:10px;
+}
+
+.brand-tag{
+ font-size:18px;
+ opacity:.85;
+ margin-bottom:30px;
+}
+
+.brand-points p{
+ margin-bottom:10px;
+ opacity:.9;
+}
+
+/* RIGHT PANEL */
+
+.auth-right{
+ flex:1;
+ background:#f8fafc;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+}
+
+/* AUTH CARD */
+
+.auth-card{
+ width:420px;
+ padding:40px;
+ border-radius:18px;
+ background:white;
+ box-shadow:0 20px 60px rgba(0,0,0,.15);
+ animation:cardAppear .6s ease;
+}
+
+@keyframes cardAppear{
+ from{opacity:0;transform:translateY(30px)}
+ to{opacity:1;transform:translateY(0)}
+}
+
+.auth-title{
+ font-size:26px;
+ font-weight:700;
+ margin-bottom:25px;
+}
+
+/* INPUTS */
+
+.input-group{
+ position:relative;
+ margin-bottom:18px;
+}
+
+.input-group input{
+ width:100%;
+ padding:12px;
+ border-radius:8px;
+ border:1px solid #e2e8f0;
+ outline:none;
+}
+
+.input-group label{
+ position:absolute;
+ top:-8px;
+ left:10px;
+ font-size:12px;
+ background:white;
+ padding:0 5px;
+ color:#64748b;
+}
+
+/* BUTTON */
+
+.auth-btn{
+ width:100%;
+ padding:12px;
+ border:none;
+ border-radius:8px;
+ background:#09090b;
+ color:white;
+ font-weight:600;
+ cursor:pointer;
+ transition:.25s;
+}
+
+.auth-btn:hover{
+ transform:translateY(-1px);
+ box-shadow:0 6px 20px rgba(9,9,11,.4);
+}
+
+/* ROLE SELECT */
+
+.role-toggle{
+ display:flex;
+ margin-bottom:20px;
+ border-radius:10px;
+ overflow:hidden;
+ border:1px solid #ddd;
+}
+
+.role-btn{
+ flex:1;
+ padding:10px;
+ text-align:center;
+ cursor:pointer;
+ background:#f1f5f9;
+}
+
+.role-btn.active{
+ background:#09090b;
+ color:white;
+}
+
+/* SERVICE CHIPS */
+
+.service-list{
+ display:flex;
+ flex-wrap:wrap;
+ gap:8px;
+ margin-bottom:15px;
+}
+
+.service-chip{
+ padding:6px 10px;
+ background:#f1f5f9;
+ border-radius:20px;
+ font-size:12px;
+ cursor:pointer;
+}
+
+.service-chip.active{
+ background:#09090b;
+ color:white;
+}
