@@ -30,10 +30,10 @@ function CompleteCustomerProfile() {
       const mutation = `
         mutation {
           completeCustomerProfile(
-            phone: "${phone}"
-            address: "${address}"
-            houseNumber: "${houseNumber}"
-            city: "${city}"
+            phone: "${phone}",
+            address: "${address}",
+            houseNumber: "${houseNumber}",
+            city: "${city}",
             state: "${state}"
           ) { id profileCompleted }
         }

@@ -47,12 +47,12 @@ function CompleteProviderProfile() {
       const mutation = `
         mutation {
           completeProviderProfile(
-            phone: "${phone}"
-            profilePicture: "${profilePicture}"
-            experienceYears: ${parseInt(experienceYears)}
-            services: "${services.join(",")}"
-            city: "${city}"
-            state: "${state}"
+            phone: "${phone}",
+            profilePicture: "${profilePicture}",
+            experienceYears: ${parseInt(experienceYears)},
+            services: "${services.join(",")}",
+            city: "${city}",
+            state: "${state}",
             description: "${description.replace(/"/g, '\\"')}"
           ) { id profileCompleted }
         }

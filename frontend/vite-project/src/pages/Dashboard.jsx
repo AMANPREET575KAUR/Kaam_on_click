@@ -3,7 +3,7 @@ import axios from "axios";
 import config from "../config";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../layout/DashboardLayout";
-import { Briefcase, DollarSign, Check, Clock, Plus, Eye, TrendingUp, ArrowRight, MapPin, Loader2, CheckCircle, Sparkles, Zap, Star, Gavel } from "lucide-react";
+import { Briefcase, DollarSign, Check, Clock, Plus, Eye, TrendingUp, ArrowRight, MapPin, Loader2, CheckCircle, Sparkles, Zap, Star, Gavel, Users, Target, Award, BarChart3, Activity } from "lucide-react";
 import { motion } from "framer-motion";
 
 function Dashboard() {
@@ -40,12 +40,12 @@ function Dashboard() {
 
   const getStatusColor = (status) => {
     const statusMap = {
-      OPEN: "bg-emerald-50 text-emerald-600 border-emerald-100",
-      ASSIGNED: "bg-blue-50 text-blue-600 border-blue-100",
+      OPEN: "bg-success-50 text-success-600 border-success-100",
+      ASSIGNED: "bg-primary-50 text-primary-600 border-primary-100",
       COMPLETED: "bg-slate-100 text-slate-900 border-slate-200",
-      PENDING: "bg-amber-50 text-amber-600 border-amber-100",
-      ACCEPTED: "bg-emerald-50 text-emerald-600 border-emerald-100",
-      REJECTED: "bg-red-50 text-red-600 border-red-100",
+      PENDING: "bg-accent-50 text-accent-600 border-accent-100",
+      ACCEPTED: "bg-success-50 text-success-600 border-success-100",
+      REJECTED: "bg-danger-50 text-danger-600 border-danger-100",
     };
     return statusMap[status] || "bg-slate-50 text-slate-500 border-slate-100";
   };
@@ -77,26 +77,27 @@ function Dashboard() {
   // ========== CUSTOMER DASHBOARD ==========
   if (userRole === "CUSTOMER") {
     const customerStats = [
-      { label: "Jobs Posted", value: stats?.totalJobs || 0, icon: Briefcase, color: "from-blue-500 to-indigo-600" },
-      { label: "Active Jobs", value: stats?.openJobs || 0, icon: Zap, color: "from-amber-400 to-orange-500" },
-      { label: "Completed", value: stats?.completedJobs || 0, icon: CheckCircle, color: "from-emerald-400 to-teal-500" },
-      { label: "Bids Received", value: stats?.totalBids || 0, icon: DollarSign, color: "from-purple-500 to-pink-600" },
+      { label: "Jobs Posted", value: stats?.totalJobs || 0, icon: Briefcase, color: "from-primary-500 to-primary-600" },
+      { label: "Active Jobs", value: stats?.openJobs || 0, icon: Zap, color: "from-accent-400 to-accent-500" },
+      { label: "Completed", value: stats?.completedJobs || 0, icon: CheckCircle, color: "from-success-400 to-success-500" },
+      { label: "Bids Received", value: stats?.totalBids || 0, icon: DollarSign, color: "from-secondary-500 to-secondary-600" },
     ];
 
     return (
       <DashboardLayout>
         <div className="space-y-10">
           {/* Hero Section */}
-          <div className="relative overflow-hidden bg-slate-950 rounded-[2.5rem] p-10 lg:p-16 text-white shadow-2xl">
-            <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-primary-600/20 blur-[100px] rounded-full" />
+          <div className="relative overflow-hidden bg-gradient-to-r from-primary-600 via-secondary-600 to-accent-600 rounded-[2.5rem] p-10 lg:p-16 text-white shadow-premium">
+            <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-white/10 blur-[100px] rounded-full" />
+            <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-white/10 blur-[100px] rounded-full" />
             <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
               <div>
                 <motion.div 
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="flex items-center gap-2 mb-4 text-primary-400 uppercase tracking-widest font-black text-xs"
+                  className="flex items-center gap-2 mb-4 text-white/90 uppercase tracking-widest font-black text-xs"
                 >
-                  <Sparkles size={14} />
+                  <Star size={14} />
                   <span>Elite Member Status</span>
                 </motion.div>
                 <motion.h1 
@@ -106,7 +107,7 @@ function Dashboard() {
                 >
                   Welcome, {userName.split(" ")[0]}!
                 </motion.h1>
-                <p className="text-slate-400 text-lg max-w-lg font-medium leading-relaxed">
+                <p className="text-white/80 text-lg max-w-lg font-medium leading-relaxed">
                   Your household projects are being handled by the best. Manage your bookings and review incoming bids below.
                 </p>
               </div>
@@ -145,20 +146,23 @@ function Dashboard() {
               <motion.div
                 key={label}
                 variants={item}
-                className="bg-white rounded-3xl p-8 border border-slate-100 shadow-premium group hover:border-primary-200 transition-all duration-300"
+                className="bg-gradient-to-br from-white to-card-gradient rounded-3xl p-8 border border-primary-100 shadow-premium group hover:shadow-premium hover:border-primary-200 transition-all duration-300 relative overflow-hidden"
               >
-                <div className="flex items-center justify-between mb-6">
-                  <div className={`p-3 rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg`}>
-                    <Icon size={24} strokeWidth={2.5} />
+                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-primary-100/50 to-secondary-100/50 rounded-full blur-2xl" />
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className={`p-3 rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                      <Icon size={24} strokeWidth={2.5} />
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <span className="text-4xl font-black bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent tracking-tighter">{value}</span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Total {label.split(' ')[0]}</span>
+                    </div>
                   </div>
-                  <div className="flex flex-col items-end">
-                    <span className="text-4xl font-black text-slate-900 tracking-tighter">{value}</span>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Total {label.split(' ')[0]}</span>
+                  <div className="flex items-center gap-1.5 overflow-hidden">
+                    <span className="text-sm font-bold text-slate-700 whitespace-nowrap">{label}</span>
+                    <div className="h-px w-full bg-gradient-to-r from-primary-100 to-secondary-100 group-hover:from-primary-200 group-hover:to-secondary-200 transition-colors" />
                   </div>
-                </div>
-                <div className="flex items-center gap-1.5 overflow-hidden">
-                  <span className="text-sm font-bold text-slate-700 whitespace-nowrap">{label}</span>
-                  <div className="h-px w-full bg-slate-100 group-hover:bg-primary-100 transition-colors" />
                 </div>
               </motion.div>
             ))}
@@ -249,24 +253,25 @@ function Dashboard() {
 
   // ========== PROVIDER DASHBOARD ==========
   const providerStats = [
-    { label: "Bids Placed", value: stats?.totalBids || 0, icon: Gavel, color: "from-blue-500 to-indigo-600" },
-    { label: "Pending", value: stats?.pendingBids || 0, icon: Clock, color: "from-amber-400 to-orange-500" },
-    { label: "Accepted", value: stats?.acceptedBids || 0, icon: Check, color: "from-emerald-400 to-teal-500" },
-    { label: "Completed", value: stats?.completedJobs || 0, icon: CheckCircle, color: "from-purple-500 to-pink-600" },
+    { label: "Bids Placed", value: stats?.totalBids || 0, icon: Gavel, color: "from-primary-500 to-primary-600" },
+    { label: "Pending", value: stats?.pendingBids || 0, icon: Clock, color: "from-accent-400 to-accent-500" },
+    { label: "Accepted", value: stats?.acceptedBids || 0, icon: Check, color: "from-success-400 to-success-500" },
+    { label: "Completed", value: stats?.completedJobs || 0, icon: CheckCircle, color: "from-secondary-500 to-secondary-600" },
   ];
 
   return (
     <DashboardLayout>
       <div className="space-y-10">
         {/* Hero Section */}
-        <div className="relative overflow-hidden bg-slate-950 rounded-[2.5rem] p-10 lg:p-16 text-white shadow-2xl">
-          <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-accent-600/20 blur-[100px] rounded-full" />
+        <div className="relative overflow-hidden bg-gradient-to-r from-accent-600 via-primary-600 to-secondary-600 rounded-[2.5rem] p-10 lg:p-16 text-white shadow-premium">
+          <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-white/10 blur-[100px] rounded-full" />
+          <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-white/10 blur-[100px] rounded-full" />
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
             <div>
               <motion.div 
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="flex items-center gap-2 mb-4 text-accent-400 uppercase tracking-widest font-black text-xs"
+                className="flex items-center gap-2 mb-4 text-white/90 uppercase tracking-widest font-black text-xs"
               >
                 <TrendingUp size={14} />
                 <span>Growth Trajectory: +12%</span>
@@ -278,7 +283,7 @@ function Dashboard() {
               >
                 Hello, {userName.split(" ")[0]}!
               </motion.h1>
-              <p className="text-slate-400 text-lg max-w-lg font-medium leading-relaxed">
+              <p className="text-white/80 text-lg max-w-lg font-medium leading-relaxed">
                 Opportunity is knocking. There are <span className="text-white font-bold">{stats?.openJobs || 0} active jobs</span> waiting for your expert touch today.
               </p>
             </div>
@@ -289,7 +294,7 @@ function Dashboard() {
             >
               <button
                 onClick={() => navigate("/job-feed")}
-                className="px-8 py-4 bg-accent-500 hover:bg-accent-600 text-white font-bold rounded-2xl transition-all shadow-xl shadow-accent-500/25 flex items-center justify-center gap-2 group whitespace-nowrap"
+                className="px-8 py-4 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white font-bold rounded-2xl transition-all shadow-xl flex items-center justify-center gap-2 group whitespace-nowrap border border-white/30"
               >
                 <Briefcase size={20} />
                 <span>Find New Jobs</span>
