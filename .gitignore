@@ -7,7 +7,7 @@ dist/
 build/
 
 # Environment variables
-.env
+# .env
 .env.local
 .env.*.local
 
@@ -30,4 +30,4 @@ Thumbs.db
 
 # Misc
 coverage/
-.cache/
+.cache/
