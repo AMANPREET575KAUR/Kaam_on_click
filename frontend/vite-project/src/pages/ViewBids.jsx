@@ -201,8 +201,12 @@ function ViewBids() {
                           
                           {job.assignedProvider && (
                             <div className="bg-slate-50 rounded-2xl p-4 mb-4 flex items-center gap-4 border border-slate-100">
-                               <div className="w-12 h-12 rounded-xl bg-slate-950 flex items-center justify-center text-white font-black text-xl shadow-lg">
-                                  {job.assignedProvider.name?.charAt(0)}
+                               <div className="w-12 h-12 rounded-xl bg-slate-950 flex items-center justify-center text-white font-black text-xl shadow-lg overflow-hidden">
+                                  {job.assignedProvider.profile?.profilePicture ? (
+                                    <img src={job.assignedProvider.profile.profilePicture} alt="" className="w-full h-full object-cover" />
+                                  ) : (
+                                    job.assignedProvider.name?.charAt(0)
+                                  )}
                                </div>
                                <div className="flex-1 min-w-0">
                                   <p className="font-bold text-slate-900 text-sm truncate">{job.assignedProvider.name}</p>
@@ -309,8 +313,14 @@ function ViewBids() {
                                 <div className="w-full md:w-56 shrink-0 space-y-4">
                                    <div className="flex items-center gap-4">
                                       <div className="w-16 h-16 rounded-[1.25rem] bg-slate-950 flex items-center justify-center text-white font-black text-2xl shadow-lg relative overflow-hidden">
-                                         {bid.provider.name.charAt(0)}
-                                         <div className="absolute inset-0 bg-gradient-to-tr from-primary-500/20 to-transparent" />
+                                         {bid.provider.profile?.profilePicture ? (
+                                           <img src={bid.provider.profile.profilePicture} alt="" className="w-full h-full object-cover" />
+                                         ) : (
+                                           <>
+                                             {bid.provider.name.charAt(0)}
+                                             <div className="absolute inset-0 bg-gradient-to-tr from-primary-500/20 to-transparent" />
+                                           </>
+                                         )}
                                       </div>
                                       <div>
                                          <h4 className="font-black text-slate-900 text-lg leading-none mb-1">{bid.provider.name}</h4>
@@ -414,9 +424,13 @@ function ViewBids() {
                 <div className="flex flex-col">
                    <div className="bg-slate-950 p-10 text-white relative flex flex-col items-center">
                       <div className="absolute top-[-50%] left-[-20%] w-64 h-64 bg-primary-600/30 blur-[80px] rounded-full" />
-                      <div className="w-24 h-24 rounded-[2rem] bg-white flex items-center justify-center text-slate-950 font-black text-4xl mb-6 shadow-xl relative z-10">
-                         {profileModal.name?.charAt(0)}
-                      </div>
+                     <div className="w-24 h-24 rounded-[2rem] bg-white flex items-center justify-center text-slate-950 font-black text-4xl mb-6 shadow-xl relative z-10 overflow-hidden">
+                       {profileModal.profile?.profilePicture ? (
+                        <img src={profileModal.profile.profilePicture} alt="" className="w-full h-full object-cover" />
+                       ) : (
+                        profileModal.name?.charAt(0)
+                       )}
+                     </div>
                       <h3 className="text-2xl font-black relative z-10">{profileModal.name}</h3>
                       <div className="flex items-center gap-2 text-primary-400 font-black text-xs uppercase tracking-widest mt-2 relative z-10">
                          <Star size={14} fill="currentColor" /> {profileModal.profile?.rating || "Verified Specialist"}

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import config from "../config";
 import DashboardLayout from "../layout/DashboardLayout";
-import { User, Briefcase, MapPin, Star, Award, Edit2, MessageSquare, ShieldCheck, Sparkles, Loader2, Phone, Mail, Clock, CheckCircle2, X, Check, Camera, TrendingUp } from "lucide-react";
+import { User, Briefcase, MapPin, Star, Award, Edit2, MessageSquare, ShieldCheck, Sparkles, Loader2, Phone, Mail, CheckCircle2, X, Check, Camera } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 function ProviderProfile() {
@@ -216,26 +216,6 @@ function ProviderProfile() {
                </div>
             </div>
 
-            <div className="bg-gradient-to-br from-primary-600 to-indigo-800 rounded-[2.5rem] p-8 text-white shadow-xl relative overflow-hidden">
-                <div className="absolute top-[-20%] right-[-20%] w-32 h-32 bg-white/10 blur-3xl rounded-full" />
-                <h3 className="text-lg font-black mb-4 flex items-center gap-2">
-                   <TrendingUp size={20} className="text-primary-300" />
-                   Performance
-                </h3>
-                <p className="text-primary-100 text-xs font-medium leading-relaxed mb-6">
-                   You are in the top 5% of providers in {profile.profile?.city || profile.state}. Keep it up!
-                </p>
-                <div className="grid grid-cols-2 gap-3">
-                   <div className="bg-white/10 p-3 rounded-xl border border-white/10">
-                      <p className="text-[9px] font-black opacity-60 uppercase mb-1">Response</p>
-                      <p className="text-sm font-black">‹ 2 Hours</p>
-                   </div>
-                   <div className="bg-white/10 p-3 rounded-xl border border-white/10">
-                      <p className="text-[9px] font-black opacity-60 uppercase mb-1">Success</p>
-                      <p className="text-sm font-black">98.4%</p>
-                   </div>
-                </div>
-            </div>
           </div>
 
           {/* Right Column: Information & Reviews */}
