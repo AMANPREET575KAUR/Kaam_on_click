@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, Settings, LogOut, ChevronDown, Bell, Search } from "lucide-react";
+import { User, Settings, LogOut, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 function Header() {
@@ -37,18 +37,7 @@ function Header() {
 
   return (
     <header className={`h-20 flex items-center justify-between px-6 lg:px-12 fixed right-0 left-0 lg:left-72 top-0 z-40 transition-all duration-300 ${scrolled ? 'bg-white/80 backdrop-blur-xl border-b border-slate-100 shadow-sm' : 'bg-transparent'}`}>
-      {/* Search Bar (Placeholder for visual excellence) */}
-      <div className="hidden md:flex items-center gap-3 bg-slate-100/50 border border-slate-200/60 rounded-2xl px-4 py-2.5 w-full max-w-sm focus-within:bg-white focus-within:ring-4 focus-within:ring-primary-500/10 focus-within:border-primary-500 transition-all duration-300">
-        <Search size={18} className="text-slate-400" />
-        <input type="text" placeholder="Search services..." className="bg-transparent border-none text-sm font-medium focus:outline-none w-full placeholder:text-slate-400" />
-      </div>
-
       <div className="flex items-center gap-4 ml-auto">
-        <button className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-500 transition-colors relative">
-          <Bell size={20} />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-accent-500 rounded-full border-2 border-white" />
-        </button>
-
         {/* Profile Dropdown */}
         <div className="relative" ref={dropdownRef}>
           <button
