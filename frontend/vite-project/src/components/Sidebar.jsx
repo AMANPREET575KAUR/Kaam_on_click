@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Plus, Briefcase, Eye, User, Settings, Gavel, Sparkles } from "lucide-react";
+import { LayoutDashboard, Plus, Briefcase, Eye, User, Settings, Gavel } from "lucide-react";
 import { motion } from "framer-motion";
 
 function Sidebar() {
@@ -27,11 +27,11 @@ function Sidebar() {
       <div className="p-8 pb-10">
         <Link to="/dashboard" className="flex items-center gap-4 group">
           <div className="w-11 h-11 rounded-2xl bg-slate-950 flex items-center justify-center shadow-premium relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
-            <span className="text-white font-black text-2xl relative z-10 antialiased tracking-tighter">K</span>
+            <span className="text-white font-black text-2xl relative z-10 antialiased tracking-tighter font-['Outfit']">K</span>
             <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-primary-500/20 to-transparent" />
           </div>
           <div className="flex flex-col">
-            <span className="text-slate-950 font-black text-xl tracking-tight leading-none mb-1.5 uppercase antialiased">
+            <span className="text-slate-950 font-black text-xl tracking-tight leading-none mb-1.5 uppercase antialiased font-['Outfit']">
               KaamOnClick
             </span>
             <div className="flex items-center gap-1.5">
@@ -76,7 +76,7 @@ function Sidebar() {
 
       {/* Account Section */}
       <div className="p-6 mt-auto">
-        <div className="bg-slate-50 rounded-3xl p-4 border border-slate-100 group hover:border-primary-100 hover:bg-primary-50/30 transition-all duration-300">
+        <div className="bg-slate-50 rounded-3xl p-4 border border-slate-100">
           <Link
             to="/settings"
             className={`flex items-center gap-4 px-3 py-3 rounded-2xl text-sm font-bold transition-all duration-300 ${
@@ -88,16 +88,6 @@ function Sidebar() {
             <Settings size={20} strokeWidth={location.pathname === "/settings" ? 2.5 : 1.5} />
             <span className="tracking-tight">Settings</span>
           </Link>
-          
-          <div className="mt-4 pt-4 border-t border-slate-200/50 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-600">
-              <Sparkles size={14} />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-slate-900 tracking-tight uppercase">Premium Membership</span>
-              <span className="text-[9px] font-medium text-slate-400 leading-none mt-1 group-hover:text-primary-600">Upgrade for pro results</span>
-            </div>
-          </div>
         </div>
       </div>
     </aside>
