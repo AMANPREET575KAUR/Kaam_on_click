@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import config from "../config";
@@ -19,6 +19,49 @@ function CompleteProviderProfile() {
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchExistingProviderDetails = async () => {
+      const userId = localStorage.getItem("userId");
+      if (!token || !userId) return;
+
+      const query = `{
+        providerProfile(userId: ${userId}) {
+          phone
+          state
+          profile {
+            services
+            experienceYears
+            description
+            city
+            profilePicture
+          }
+        }
+      }`;
+
+      try {
+        const res = await axios.post(config.API_URL, { query }, { headers: { authorization: token } });
+        const data = res.data?.data?.providerProfile;
+        if (!data) return;
+
+        setPhone(data.phone || "");
+        setState(data.state || "");
+        setCity(data.profile?.city || "");
+        setExperienceYears(data.profile?.experienceYears ? String(data.profile.experienceYears) : "");
+        setDescription(data.profile?.description || "");
+        setProfilePicture(data.profile?.profilePicture || "");
+
+        const existingServices = data.profile?.services
+          ? data.profile.services.split(",").map((s) => s.trim()).filter(Boolean)
+          : [];
+        setServices(existingServices);
+      } catch (err) {
+        // Prefill is best-effort and should not block completion flow.
+      }
+    };
+
+    fetchExistingProviderDetails();
+  }, [token]);
 
   const servicesList = ["Plumbing", "Electrician", "Cleaning", "Carpenter", "Painter", "AC Repair", "Appliance Repair"];
 
@@ -47,12 +90,12 @@ function CompleteProviderProfile() {
       const mutation = `
         mutation {
           completeProviderProfile(
-            phone: "${phone}",
-            profilePicture: "${profilePicture}",
-            experienceYears: ${parseInt(experienceYears)},
-            services: "${services.join(",")}",
-            city: "${city}",
-            state: "${state}",
+            phone: "${phone}"
+            profilePicture: "${profilePicture}"
+            experienceYears: ${parseInt(experienceYears)}
+            services: "${services.join(",")}"
+            city: "${city}"
+            state: "${state}"
             description: "${description.replace(/"/g, '\\"')}"
           ) { id profileCompleted }
         }

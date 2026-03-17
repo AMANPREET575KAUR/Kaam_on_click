@@ -3,7 +3,7 @@ import { Zap, Shield, Users, CheckCircle2 } from "lucide-react";
 
 function AuthLayout({ children }) {
   return (
-    <div className="min-h-screen flex bg-slate-50 font-sans selection:bg-primary-100 selection:text-primary-900">
+    <div className="min-h-screen flex bg-slate-50 font-['Outfit'] selection:bg-primary-100 selection:text-primary-900">
       {/* ─── Left branded panel ─── */}
       <div className="hidden lg:flex lg:w-[46%] relative bg-slate-950 overflow-hidden">
         {/* Animated Background Gradients */}
