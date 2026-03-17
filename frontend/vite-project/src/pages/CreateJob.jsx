@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import config from "../config";
 import DashboardLayout from "../layout/DashboardLayout";
-import { Briefcase, MapPin, DollarSign, Calendar, ArrowRight, Sparkles, CheckCircle, Info, LayoutGrid, MapPinned, CreditCard, Clock, ChevronDown } from "lucide-react";
+import { Briefcase, MapPin, Calendar, ArrowRight, Sparkles, CheckCircle, Info, LayoutGrid, MapPinned, CreditCard, Clock, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { states } from "../data/states";
 
@@ -55,9 +55,9 @@ function CreateJob() {
 
   return (
     <DashboardLayout>
-      <div className="max-w-4xl mx-auto pb-20">
+      <div className="max-w-6xl mx-auto pb-20">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+        <div className="flex flex-col gap-6 mb-12">
           <div>
             <div className="flex items-center gap-2 mb-3 text-primary-600 font-bold uppercase tracking-widest text-[10px]">
               <Sparkles size={14} />
@@ -65,13 +65,6 @@ function CreateJob() {
             </div>
             <h1 className="text-4xl font-black text-slate-900 tracking-tight">Create New Request</h1>
             <p className="text-slate-500 font-medium mt-1">Provide details of your project to receive high-quality bids from elite providers.</p>
-          </div>
-          <div className="hidden lg:flex items-center gap-4 bg-white p-4 rounded-3xl border border-slate-100 shadow-premium">
-             <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600"><CheckCircle size={20} /></div>
-             <div>
-                <p className="text-xs font-black text-slate-900 uppercase">Verified Platform</p>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Secure Escrow Protection</p>
-             </div>
           </div>
         </div>
 
@@ -98,9 +91,7 @@ function CreateJob() {
           )}
         </AnimatePresence>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          {/* Main Form Area */}
-          <div className="lg:col-span-2 space-y-8">
+        <div className="space-y-8">
             <div className="bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-premium">
               <div className="space-y-8">
                 {/* Service Selection */}
@@ -207,7 +198,6 @@ function CreateJob() {
                       </div>
                       <div className="flex gap-3">
                          <div className="relative flex-1">
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 text-sm font-bold">₹</span>
                             <input
                               type="number"
                               placeholder="Min"
@@ -217,7 +207,6 @@ function CreateJob() {
                             />
                          </div>
                          <div className="relative flex-1">
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 text-sm font-bold">₹</span>
                             <input
                               type="number"
                               placeholder="Max"
@@ -250,41 +239,6 @@ function CreateJob() {
                 </motion.button>
               </div>
             </div>
-          </div>
-
-          {/* Guidelines Sidebar */}
-          <div className="space-y-6">
-             <div className="bg-slate-50 rounded-3xl p-8 border border-slate-100 space-y-6">
-                <h3 className="text-xl font-black text-slate-900 tracking-tight">Project Tips</h3>
-                <div className="space-y-4">
-                   {[
-                      { icon: Clock, title: "Be Specific", detail: "Detail leads to more accurate quotes." },
-                      { icon: MapPin, title: "Location Matters", detail: "Verify your address for quick arrives." },
-                      { icon: CreditCard, title: "Fair Budget", detail: "Willing to pay for quality attracts pros." },
-                   ].map((tip, i) => (
-                      <div key={i} className="flex gap-4">
-                         <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-sm shrink-0 text-primary-500"><tip.icon size={16} /></div>
-                         <div>
-                            <p className="text-xs font-black text-slate-900 uppercase mb-0.5">{tip.title}</p>
-                            <p className="text-[11px] font-medium text-slate-400 leading-relaxed">{tip.detail}</p>
-                         </div>
-                      </div>
-                   ))}
-                </div>
-             </div>
-
-             <div className="bg-gradient-to-br from-primary-600 to-indigo-700 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
-                <div className="absolute top-[-20%] right-[-20%] w-32 h-32 bg-white/10 blur-3xl rounded-full" />
-                <h3 className="text-lg font-black mb-4 flex items-center gap-2">
-                   <Sparkles size={20} className="text-primary-300" />
-                   Premium Trust
-                </h3>
-                <p className="text-primary-50 text-xs font-medium leading-relaxed mb-6">
-                   Every job posted on KaamOnClick is backed by our ₹10,000 Quality Protection Plan. Rest easy while the pros work.
-                </p>
-                <button className="w-full bg-white/10 hover:bg-white/20 border border-white/20 py-3 rounded-xl text-xs font-bold transition-all transition-colors backdrop-blur-sm">View Terms</button>
-             </div>
-          </div>
         </div>
       </div>
     </DashboardLayout>
