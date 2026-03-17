@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import config from "../config";
@@ -18,6 +18,39 @@ function CompleteCustomerProfile() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    const fetchExistingCustomerDetails = async () => {
+      const userId = localStorage.getItem("userId");
+      if (!token || !userId) return;
+
+      const query = `{
+        customerProfile(userId: ${userId}) {
+          phone
+          state
+          address
+          houseNumber
+          city
+        }
+      }`;
+
+      try {
+        const res = await axios.post(config.API_URL, { query }, { headers: { authorization: token } });
+        const data = res.data?.data?.customerProfile;
+        if (!data) return;
+
+        setPhone(data.phone || "");
+        setState(data.state || "");
+        setAddress(data.address || "");
+        setHouseNumber(data.houseNumber || "");
+        setCity(data.city || "");
+      } catch (err) {
+        // Prefill is best-effort and should not block completion flow.
+      }
+    };
+
+    fetchExistingCustomerDetails();
+  }, [token]);
+
   const handleSubmit = async () => {
     if (!address || !city || !state) {
       setError("Address, city and state are required");
@@ -30,10 +63,10 @@ function CompleteCustomerProfile() {
       const mutation = `
         mutation {
           completeCustomerProfile(
-            phone: "${phone}",
-            address: "${address}",
-            houseNumber: "${houseNumber}",
-            city: "${city}",
+            phone: "${phone}"
+            address: "${address}"
+            houseNumber: "${houseNumber}"
+            city: "${city}"
             state: "${state}"
           ) { id profileCompleted }
         }
