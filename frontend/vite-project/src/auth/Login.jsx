@@ -82,10 +82,6 @@ function Login() {
   return (
     <AuthLayout>
       <div className="w-full">
-        {/* Header Section */}
-        <div className="fixed top-0 left-0 right-0 bg-primary-600 text-white text-[10px] font-black uppercase tracking-[0.3em] py-2 text-center z-[100] shadow-xl">
-          KaamOnClick Elite Redesign v2.0 • Active Deployment
-        </div>
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}

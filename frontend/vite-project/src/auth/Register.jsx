@@ -5,7 +5,7 @@ import AuthLayout from "../layout/AuthLayout";
 import { states } from "../data/states";
 import { Link, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { User, Mail, Lock, MapPin, Briefcase, CheckCircle2, AlertCircle, ChevronDown, Sparkles, Phone, ArrowRight } from "lucide-react";
+import { User, Mail, Lock, MapPin, Briefcase, CheckCircle2, AlertCircle, ChevronDown, Phone, ArrowRight } from "lucide-react";
 import ServiceSelector from "../components/ServiceSelector";
 
 function Register() {
@@ -37,8 +37,6 @@ function Register() {
   const handleRegister = async (e) => {
     if (e) e.preventDefault();
     
-    console.log("Registration attempt initialized:", { role, name, email, state, services });
-
     if (!name || !email || !password || !state || !phone) {
       setError("Please fill in all required fields including your phone line.");
       return;
@@ -82,7 +80,6 @@ function Register() {
         };
       }
 
-      console.log("Sending GraphQL Mutation with variables...");
       const res = await axios.post(config.API_URL, { query, variables });
       
       if (res.data.errors) {
@@ -90,7 +87,6 @@ function Register() {
         throw new Error(res.data.errors[0].message);
       }
       
-      console.log("Registration Successful!");
       alert("Registration successful! Redirecting to login...");
       navigate("/");
     } catch (err) {
@@ -109,15 +105,11 @@ function Register() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-10 text-center lg:text-left"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-50 text-primary-600 text-[10px] font-black uppercase tracking-widest mb-4">
-            <Sparkles size={14} />
-            <span>Join the revolution</span>
-          </div>
-          <h2 className="text-4xl font-black text-slate-950 tracking-tight mb-3">
+          <h2 className="text-4xl font-extrabold text-slate-950 tracking-tight mb-3">
             Create Account
           </h2>
           <p className="text-slate-500 font-medium">
-            Get started with India's elite service network.
+            Create your account to continue.
           </p>
         </motion.div>
 
@@ -174,7 +166,7 @@ function Register() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4.5 pl-12 pr-4 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:bg-white transition-all shadow-inner"
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:bg-white transition-all"
                 placeholder="John Doe"
               />
             </div>
@@ -189,7 +181,7 @@ function Register() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4.5 pl-12 pr-4 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:bg-white transition-all shadow-inner"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:bg-white transition-all"
                   placeholder="john@example.com"
                 />
               </div>
@@ -203,7 +195,7 @@ function Register() {
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4.5 pl-12 pr-4 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:bg-white transition-all shadow-inner"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:bg-white transition-all"
                   placeholder="+91 XXXX XXXX"
                 />
               </div>
@@ -219,7 +211,7 @@ function Register() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4.5 pl-12 pr-4 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:bg-white transition-all shadow-inner"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:bg-white transition-all"
                   placeholder="••••••••"
                 />
               </div>
@@ -232,7 +224,7 @@ function Register() {
                 <select
                   value={state}
                   onChange={(e) => setState(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4.5 pl-12 pr-10 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:bg-white transition-all shadow-inner appearance-none cursor-pointer"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-10 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:bg-white transition-all appearance-none cursor-pointer"
                 >
                   <option value="">Select territory</option>
                   {states.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -268,14 +260,14 @@ function Register() {
               whileTap={{ scale: 0.99 }}
               type="submit"
               disabled={isLoading}
-              className="w-full bg-slate-950 hover:bg-slate-900 disabled:opacity-50 disabled:cursor-not-allowed text-white font-black rounded-[2rem] py-5.5 transition-all duration-300 flex items-center justify-center gap-3 shadow-2xl shadow-slate-200 group relative overflow-hidden"
+              className="w-full bg-slate-950 hover:bg-slate-900 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all duration-300 flex items-center justify-center gap-3 shadow-xl shadow-slate-200 group relative overflow-hidden"
             >
               {isLoading ? (
-                <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
               ) : (
                 <>
-                  <span>Create Account Profile</span>
-                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                  <span>Create Account</span>
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </>
               )}
               <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
@@ -285,13 +277,8 @@ function Register() {
 
         <div className="text-center mt-10 pt-10 border-t border-slate-100">
           <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">
-            Registered Partner? <Link to="/" className="text-slate-950 hover:underline">Authorize Access</Link>
+            Registered Partner? <Link to="/" className="text-primary-600 hover:text-primary-700 hover:underline">Login</Link>
           </p>
-          <div className="flex items-center justify-center gap-6 mt-8 opacity-40 grayscale group-hover:grayscale-0 transition-all">
-             <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest"><CheckCircle2 size={12} className="text-emerald-500" /> Secure Data</div>
-             <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />
-             <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-primary-500"><Sparkles size={12} /> Elite Privacy</div>
-          </div>
         </div>
       </div>
     </AuthLayout>

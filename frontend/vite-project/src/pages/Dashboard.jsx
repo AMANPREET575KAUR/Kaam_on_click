@@ -3,7 +3,7 @@ import axios from "axios";
 import config from "../config";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../layout/DashboardLayout";
-import { Briefcase, DollarSign, Check, Clock, Plus, Eye, TrendingUp, ArrowRight, MapPin, Loader2, CheckCircle, Sparkles, Zap, Star, Gavel } from "lucide-react";
+import { Briefcase, DollarSign, Check, Clock, Plus, Eye, TrendingUp, ArrowRight, MapPin, Loader2, CheckCircle, Sparkles, Zap, Gavel } from "lucide-react";
 import { motion } from "framer-motion";
 
 function Dashboard() {
@@ -165,9 +165,9 @@ function Dashboard() {
           </motion.div>
 
           {/* Activity Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="space-y-6">
             {/* Recent Jobs - Main List */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="space-y-6">
               <div className="flex items-center justify-between px-2">
                 <h2 className="text-2xl font-black text-slate-900 tracking-tight">Active Job Posts</h2>
                 <button onClick={() => navigate("/view-bids")} className="text-sm font-bold text-primary-600 hover:text-primary-700 flex items-center gap-1 group">
@@ -224,23 +224,6 @@ function Dashboard() {
               )}
             </div>
 
-            {/* Recommendations/Help Sidebar */}
-            <div className="space-y-6">
-               <h2 className="text-2xl font-black text-slate-900 tracking-tight px-2">Top Services</h2>
-               <div className="bg-gradient-to-br from-primary-600 to-indigo-700 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
-                  <div className="absolute bottom-[-20%] right-[-20%] w-40 h-40 bg-white/10 blur-3xl rounded-full" />
-                  <h3 className="text-xl font-black mb-2 leading-tight">Professional Cleaning</h3>
-                  <p className="text-primary-100 text-xs font-medium mb-6 leading-relaxed">Most hired service in your area this month.</p>
-                  <button className="w-full bg-white text-primary-700 py-3 rounded-xl font-black text-sm hover:scale-[1.02] transition-transform">Book Now</button>
-               </div>
-               <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-premium">
-                  <div className="flex items-center gap-4 mb-4">
-                     <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600"><Star size={20} fill="currentColor" /></div>
-                     <h3 className="text-base font-black text-slate-900">Elite Guarantee</h3>
-                  </div>
-                  <p className="text-slate-500 text-xs font-medium leading-relaxed">All our professionals go through a rigorous 3-step verification process to ensure your safety and quality of work.</p>
-               </div>
-            </div>
           </div>
         </div>
       </DashboardLayout>
@@ -337,9 +320,9 @@ function Dashboard() {
         </motion.div>
 
         {/* Activity Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="space-y-6">
           {/* Recent Bids - Main List */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="space-y-6">
             <div className="flex items-center justify-between px-2">
               <h2 className="text-2xl font-black text-slate-900 tracking-tight">Recent Bids Activity</h2>
               <button onClick={() => navigate("/my-bids")} className="text-sm font-bold text-accent-600 hover:text-accent-700 flex items-center gap-1 group">
@@ -393,27 +376,6 @@ function Dashboard() {
             )}
           </div>
 
-          {/* Provider Performance */}
-          <div className="space-y-6">
-             <h2 className="text-2xl font-black text-slate-900 tracking-tight px-2">Performance</h2>
-             <div className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-premium relative overflow-hidden text-center">
-                <div className="w-20 h-20 rounded-full border-8 border-emerald-500 flex items-center justify-center mx-auto mb-6 relative">
-                   <div className="absolute inset-0 bg-emerald-500/10 blur-xl rounded-full" />
-                   <span className="text-xl font-black text-slate-900">88%</span>
-                </div>
-                <h3 className="text-lg font-black text-slate-900 mb-2">High Acceptance</h3>
-                <p className="text-slate-500 text-xs font-medium leading-relaxed mb-6">Your bid acceptance rate is 15% higher than the average provider in your state.</p>
-                <div className="flex items-center gap-2 justify-center text-emerald-600 font-black text-[10px] uppercase tracking-widest">
-                   <TrendingUp size={14} />
-                   <span>Top 10% Rated</span>
-                </div>
-             </div>
-             
-             <div className="bg-gradient-to-br from-indigo-600 to-primary-700 rounded-3xl p-6 text-white shadow-xl">
-                <p className="text-[10px] font-bold text-primary-200 uppercase tracking-widest mb-2">Quick Tip</p>
-                <p className="text-sm font-bold leading-relaxed">Personalized messages in bids increase your win rate by up to 45%.</p>
-             </div>
-          </div>
         </div>
       </div>
     </DashboardLayout>

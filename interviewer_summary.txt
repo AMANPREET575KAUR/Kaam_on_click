@@ -1,0 +1,60 @@
+# 🚀 KaamOnClick - Project Summary for Interviewers
+
+## 📌 Project Overview
+KaamOnClick is a hyperlocal service marketplace platform that connects customers with nearby service professionals (plumbers, electricians, tutors, etc.). It features a bidding system where providers can bid on jobs, and customers can select the best professional based on price and rating.
+
+---
+
+## 🛠 Tech Stack
+- **Frontend**: React 19, Vite, Tailwind CSS, Framer Motion, Axios, React Router.
+- **Backend**: Node.js, Express.js, GraphQL (express-graphql).
+- **Database**: MySQL with Sequelize ORM.
+- **Real-time**: Socket.io (Infrastructure ready).
+- **Security**: JWT Authentication, bcrypt password hashing.
+
+---
+
+## 🌟 Key Features
+1. **Dual-Role System**: Distinct workflows for 'CUSTOMERS' (Post jobs, view bids, select providers) and 'PROVIDERS' (Browse jobs in their state, place bids, manage profiles).
+2. **Bidding Engine**: Real-time bidding logic with budget constraints and 24-hour cancellation rules.
+3. **Hyperlocal Matching**: Providers are automatically filtered to see jobs only within their registered state.
+4. **Rating & Reviews**: Automatic average rating calculation for providers based on completed jobs.
+5. **Dynamic Dashboard**: Personalized stats for both roles (Pending bids, active jobs, earnings-ready metrics).
+
+---
+
+## 🧠 Technical Highlights (Interviewer "Deep Dives")
+
+### 1. Why GraphQL?
+- **Answer**: I used GraphQL to provide a more flexible and typed API. It prevents over-fetching (getting only the data needed for the dashboard) and under-fetching (getting job details and bid details in one request). It also centralizes the schema, making the frontend-backend contract very clear.
+
+### 2. How did you handle User Roles in the Database?
+- **Answer**: I used a single `Users` table with a `role` column ('CUSTOMER' or 'PROVIDER'). To allow the same email to be used for different roles but keep it unique within the same role, I implemented a **Composite Unique Index** on `[email, role]` using a custom Sequelize migration logic in the server startup.
+
+### 3. Explain the Bidding Workflow.
+- **Answer**: When a customer selects a bid, the job status changes to `ASSIGNED`. I implemented a transaction-like logic where the selected bid status becomes `ACCEPTED`, and all other active bids for that job are automatically marked as `REJECTED`. This ensures data integrity and a smooth user experience.
+
+### 4. How is Authentication handled?
+- **Answer**: It’s JWT-based. The token is generated during login/signup and sent in the `Authorization` header. On the backend, a middleware verifies the token and injects the user object into the **GraphQL Context**, which is then used by resolvers to authorize operations (RBAC).
+
+### 5. Frontend Architecture?
+- **Answer**: Built with React 19 and Vite for speed. I used **Protected Routes** to manage access and **Tailwind CSS** for a responsive, modern UI. State is handled locally and passed via props/context where necessary.
+
+---
+
+## 📊 Database Schema (Main Tables)
+- **Users**: Stores profile info, credentials, and role.
+- **Jobs**: Stores service type, description, location (state/city), budget, and status.
+- **Bids**: Linked to Jobs and Users; stores bid price and message.
+- **Reviews**: Linked to Jobs; stores ratings and comments for providers.
+- **ProviderProfiles**: Extended profile data for providers (experience, skills, profile picture).
+
+---
+
+## 🚀 Possible Questions to Expect:
+- **Q: How do you handle job location?**
+  - *A: Jobs are categorized by 'State'. Providers only see jobs in their registered state to ensure services are hyperlocal.*
+- **Q: How did you implement real-time updates?**
+  - *A: The backend integrates Socket.io, allowing for potential real-time bid notifications.*
+- **Q: What was the biggest challenge?**
+  - *A: Managing the complex state transitions of a job (from OPEN to ASSIGNED to COMPLETED) while ensuring all related bids are updated correctly.*

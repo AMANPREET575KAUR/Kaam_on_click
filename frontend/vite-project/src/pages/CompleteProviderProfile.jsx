@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import config from "../config";
 import { Phone, Camera, MapPin, Building2, Clock, Wrench, FileText, ArrowRight, Sparkles, CheckCircle2, ChevronDown, UserCircle } from "lucide-react";
 import { states } from "../data/states";
 import { motion, AnimatePresence } from "framer-motion";
+import UploadOptionsModal from "../components/UploadOptionsModal";
+import CameraCapture from "../components/CameraCapture";
 
 function CompleteProviderProfile() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const fileInputRef = useRef(null);
 
   const [phone, setPhone] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
@@ -19,6 +22,52 @@ function CompleteProviderProfile() {
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchExistingProviderDetails = async () => {
+      const userId = localStorage.getItem("userId");
+      if (!token || !userId) return;
+
+      const query = `{
+        providerProfile(userId: ${userId}) {
+          phone
+          state
+          profile {
+            services
+            experienceYears
+            description
+            city
+            profilePicture
+          }
+        }
+      }`;
+
+      try {
+        const res = await axios.post(config.API_URL, { query }, { headers: { authorization: token } });
+        const data = res.data?.data?.providerProfile;
+        if (!data) return;
+
+        setPhone(data.phone || "");
+        setState(data.state || "");
+        setCity(data.profile?.city || "");
+        setExperienceYears(data.profile?.experienceYears ? String(data.profile.experienceYears) : "");
+        setDescription(data.profile?.description || "");
+        setProfilePicture(data.profile?.profilePicture || "");
+
+        const existingServices = data.profile?.services
+          ? data.profile.services.split(",").map((s) => s.trim()).filter(Boolean)
+          : [];
+        setServices(existingServices);
+      } catch (err) {
+        // Prefill is best-effort and should not block completion flow.
+      }
+    };
+
+    fetchExistingProviderDetails();
+  }, [token]);
 
   const servicesList = ["Plumbing", "Electrician", "Cleaning", "Carpenter", "Painter", "AC Repair", "Appliance Repair"];
 
@@ -33,6 +82,10 @@ function CompleteProviderProfile() {
     const reader = new FileReader();
     reader.onloadend = () => setProfilePicture(reader.result);
     reader.readAsDataURL(file);
+  };
+
+  const handleCameraCapture = (dataUrl) => {
+    setProfilePicture(dataUrl);
   };
 
   const handleSubmit = async () => {
@@ -69,6 +122,19 @@ function CompleteProviderProfile() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center p-6 font-sans selection:bg-primary-100 selection:text-primary-900 overflow-hidden relative">
+      <UploadOptionsModal 
+        isOpen={isOptionsOpen} 
+        onClose={() => setIsOptionsOpen(false)} 
+        onTakePhoto={() => setIsCameraOpen(true)}
+        onChooseFromDevice={() => fileInputRef.current?.click()}
+      />
+
+      <CameraCapture 
+        isOpen={isCameraOpen} 
+        onClose={() => setIsCameraOpen(false)} 
+        onCapture={handleCameraCapture}
+      />
+
       {/* Decorative Background */}
       <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary-600/10 blur-[150px] rounded-full" />
       <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-600/10 blur-[150px] rounded-full" />
@@ -111,17 +177,36 @@ function CompleteProviderProfile() {
              <div className="shrink-0 group">
                 <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 text-center">Business Avatar</label>
                 <div className="relative">
-                   <div className="w-32 h-32 rounded-[2.5rem] bg-slate-100 flex items-center justify-center overflow-hidden border-2 border-dashed border-slate-200 group-hover:border-primary-400 transition-all shadow-inner relative">
+                   <div 
+                    onClick={() => setIsOptionsOpen(true)}
+                    className="w-32 h-32 rounded-[2.5rem] bg-slate-100 flex items-center justify-center overflow-hidden border-2 border-dashed border-slate-200 group-hover:border-primary-400 cursor-pointer transition-all shadow-inner relative"
+                   >
                       {profilePicture ? (
                         <img src={profilePicture} alt="Preview" className="w-full h-full object-cover" />
                       ) : (
                         <UserCircle className="text-slate-200" size={64} strokeWidth={1} />
                       )}
+                      
+                      {/* Hover Overlay */}
+                      <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/20 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                         <Camera className="text-white scale-90 group-hover:scale-100 transition-transform" size={32} strokeWidth={2.5} />
+                      </div>
                    </div>
-                   <label className="absolute bottom-[-10px] right-[-10px] cursor-pointer w-12 h-12 bg-slate-950 text-white rounded-2xl flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-all">
-                      <Camera size={20} strokeWidth={2.5} />
-                      <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
-                   </label>
+                   
+                   <button 
+                    onClick={() => setIsOptionsOpen(true)}
+                    className="absolute bottom-[-10px] right-[-10px] cursor-pointer w-12 h-12 bg-slate-950 text-white rounded-2xl flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-all z-20 group/btn"
+                   >
+                      <Camera size={20} strokeWidth={2.5} className="group-hover/btn:rotate-12 transition-transform" />
+                   </button>
+                   
+                   <input 
+                    ref={fileInputRef}
+                    type="file" 
+                    accept="image/*" 
+                    className="hidden" 
+                    onChange={handleFileChange} 
+                   />
                 </div>
              </div>
 
