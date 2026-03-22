@@ -122,7 +122,7 @@ function CompleteCustomerProfile() {
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
              <div className="group">
-               <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Phone Number</label>
+               <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Phone Number <span className="text-red-500 ml-0.5">*</span></label>
                <div className="relative group/input">
                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-primary-500 transition-colors" size={18} />
                  <input
@@ -151,7 +151,7 @@ function CompleteCustomerProfile() {
           </div>
 
           <div className="group">
-            <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Complete Street Address</label>
+            <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Complete Street Address <span className="text-red-500 ml-0.5">*</span></label>
             <div className="relative group/input">
               <MapPin className="absolute left-4 top-5 text-slate-300 group-focus-within/input:text-primary-500 transition-colors" size={18} />
               <textarea
@@ -166,7 +166,7 @@ function CompleteCustomerProfile() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
              <div className="group">
-               <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">City</label>
+               <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">City <span className="text-red-500 ml-0.5">*</span></label>
                <div className="relative group/input">
                  <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-primary-500 transition-colors" size={18} />
                  <input
@@ -180,7 +180,7 @@ function CompleteCustomerProfile() {
              </div>
 
              <div className="group">
-               <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">State</label>
+               <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">State <span className="text-red-500 ml-0.5">*</span></label>
                <div className="relative group/input">
                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-primary-500 transition-colors" size={18} />
                  <select

@@ -70,7 +70,7 @@ function SignupCustomer() {
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
              <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Full Name <span className="text-red-500 ml-0.5">*</span></label>
                 <div className="relative group/input">
                    <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-primary-500 transition-colors" size={18} />
                    <input
@@ -80,7 +80,7 @@ function SignupCustomer() {
                 </div>
              </div>
              <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Phone Line</label>
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Phone Line <span className="text-red-500 ml-0.5">*</span></label>
                 <div className="relative group/input">
                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-primary-500 transition-colors" size={18} />
                    <input
@@ -92,7 +92,7 @@ function SignupCustomer() {
           </div>
 
           <div className="space-y-2">
-             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Identity (Email)</label>
+             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Identity (Email) <span className="text-red-500 ml-0.5">*</span></label>
              <div className="relative group/input">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-primary-500 transition-colors" size={18} />
                 <input
@@ -104,7 +104,7 @@ function SignupCustomer() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
              <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Access Key</label>
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Access Key <span className="text-red-500 ml-0.5">*</span></label>
                 <div className="relative group/input">
                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-primary-500 transition-colors" size={18} />
                    <input
@@ -114,7 +114,7 @@ function SignupCustomer() {
                 </div>
              </div>
              <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Primary State</label>
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Primary State <span className="text-red-500 ml-0.5">*</span></label>
                 <div className="relative group/input">
                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-primary-500 transition-colors" size={18} />
                    <input

@@ -83,28 +83,28 @@ function SignupProvider() {
              </div>
              <div className="space-y-6">
                 <div className="space-y-2 group/input">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Legal Name</label>
+                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Legal Name <span className="text-red-500 ml-0.5">*</span></label>
                   <div className="relative">
                     <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-primary-500 transition-colors" size={18} />
                     <input type="text" placeholder="Full Legal Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4.5 pl-12 pr-4 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all shadow-inner" />
                   </div>
                 </div>
                 <div className="space-y-2 group/input">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email Identifier</label>
+                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email Identifier <span className="text-red-500 ml-0.5">*</span></label>
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-primary-500 transition-colors" size={18} />
                     <input type="email" placeholder="professional@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4.5 pl-12 pr-4 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all shadow-inner" />
                   </div>
                 </div>
                 <div className="space-y-2 group/input">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Secure Passkey</label>
+                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Secure Passkey <span className="text-red-500 ml-0.5">*</span></label>
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-primary-500 transition-colors" size={18} />
                     <input type="password" placeholder="•••••••••" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4.5 pl-12 pr-4 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all shadow-inner" />
                   </div>
                 </div>
                 <div className="space-y-2 group/input">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Business Phone</label>
+                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Business Phone <span className="text-red-500 ml-0.5">*</span></label>
                   <div className="relative">
                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-primary-500 transition-colors" size={18} />
                     <input type="tel" placeholder="+91 XXXXX XXXXX" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4.5 pl-12 pr-4 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all shadow-inner" />
@@ -122,14 +122,14 @@ function SignupProvider() {
              <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                    <div className="space-y-2 group/input">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">State Territory</label>
+                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">State Territory <span className="text-red-500 ml-0.5">*</span></label>
                       <div className="relative">
                         <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-primary-500 transition-colors" size={18} />
                         <input type="text" placeholder="State" value={state} onChange={(e) => setState(e.target.value)} className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4.5 pl-12 pr-4 text-sm font-bold focus:outline-none" />
                       </div>
                    </div>
                    <div className="space-y-2 group/input">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Operating City</label>
+                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Operating City <span className="text-red-500 ml-0.5">*</span></label>
                       <div className="relative">
                         <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-primary-500 transition-colors" size={18} />
                         <input type="text" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4.5 pl-12 pr-4 text-sm font-bold focus:outline-none" />
@@ -137,14 +137,14 @@ function SignupProvider() {
                    </div>
                 </div>
                 <div className="space-y-2 group/input">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Primary Skillsets (Comma Sep)</label>
+                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Primary Skillsets (Comma Sep) <span className="text-red-500 ml-0.5">*</span></label>
                   <div className="relative">
                     <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-primary-500 transition-colors" size={18} />
                     <input type="text" placeholder="e.g. Plumbing, Electrical, HVAC" value={services} onChange={(e) => setServices(e.target.value)} className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4.5 pl-12 pr-4 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all shadow-inner" />
                   </div>
                 </div>
                 <div className="space-y-2 group/input">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Commercial Experience (Years)</label>
+                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Commercial Experience (Years) <span className="text-red-500 ml-0.5">*</span></label>
                   <div className="relative">
                     <Clock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-primary-500 transition-colors" size={18} />
                     <input type="number" min="0" placeholder="Years" value={experience} onChange={(e) => setExperience(e.target.value)} className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4.5 pl-12 pr-4 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all shadow-inner" />

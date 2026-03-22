@@ -1,9 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import config from "../config";
 import DashboardLayout from "../layout/DashboardLayout";
 import { User, Briefcase, MapPin, Star, Award, Edit2, MessageSquare, ShieldCheck, Sparkles, Loader2, Phone, Mail, CheckCircle2, X, Check, Camera } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import UploadOptionsModal from "../components/UploadOptionsModal";
+import CameraCapture from "../components/CameraCapture";
+
 
 function ProviderProfile() {
    const [profile, setProfile] = useState(null);
@@ -12,6 +15,11 @@ function ProviderProfile() {
    const [isEditing, setIsEditing] = useState(false);
    const [errorMessage, setErrorMessage] = useState("");
    const [formData, setFormData] = useState({ name: "", phone: "", state: "", city: "", services: "", experienceYears: 0, description: "", profilePicture: "" });
+   const fileInputRef = useRef(null);
+
+   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+   const [isCameraOpen, setIsCameraOpen] = useState(false);
+
 
    const formatReviewDate = (createdAt) => {
       if (!createdAt) return "";
@@ -120,6 +128,11 @@ function ProviderProfile() {
       } catch (error) { alert("Failed to update profile."); }
    };
 
+   const handleCameraCapture = (dataUrl) => {
+      setFormData((prev) => ({ ...prev, profilePicture: dataUrl }));
+   };
+
+
   if (isLoading) {
     return (
       <DashboardLayout>
@@ -148,6 +161,18 @@ function ProviderProfile() {
 
   return (
     <DashboardLayout>
+      <UploadOptionsModal 
+        isOpen={isOptionsOpen} 
+        onClose={() => setIsOptionsOpen(false)} 
+        onTakePhoto={() => setIsCameraOpen(true)}
+        onChooseFromDevice={() => fileInputRef.current?.click()}
+      />
+
+      <CameraCapture 
+        isOpen={isCameraOpen} 
+        onClose={() => setIsCameraOpen(false)} 
+        onCapture={handleCameraCapture}
+      />
       <div className="max-w-7xl mx-auto pb-20">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
@@ -263,42 +288,42 @@ function ProviderProfile() {
 
                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-2">
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Legal Name</label>
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Legal Name <span className="text-red-500 ml-0.5">*</span></label>
                            <input
                              type="text" name="name" value={formData.name} onChange={handleInputChange}
                              className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all placeholder:text-slate-300 shadow-inner"
                            />
                         </div>
                         <div className="space-y-2">
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Contact Phone</label>
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Contact Phone <span className="text-red-500 ml-0.5">*</span></label>
                            <input
                              type="tel" name="phone" value={formData.phone} onChange={handleInputChange}
                              className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all shadow-inner"
                            />
                         </div>
                         <div className="space-y-2">
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Service City</label>
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Service City <span className="text-red-500 ml-0.5">*</span></label>
                            <input
                              type="text" name="city" value={formData.city} onChange={handleInputChange}
                              className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all shadow-inner"
                            />
                         </div>
                         <div className="space-y-2">
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Skills (Comma Sep)</label>
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Skills (Comma Sep) <span className="text-red-500 ml-0.5">*</span></label>
                            <input
                              type="text" name="services" value={formData.services} onChange={handleInputChange}
                              className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all shadow-inner"
                            />
                                      </div>
                                      <div className="space-y-2">
-                                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Operating State</label>
+                                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Operating State <span className="text-red-500 ml-0.5">*</span></label>
                                           <input
                                              type="text" name="state" value={formData.state} onChange={handleInputChange}
                                              className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all shadow-inner"
                                           />
                                      </div>
                                      <div className="space-y-2">
-                                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Experience Years</label>
+                                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Experience Years <span className="text-red-500 ml-0.5">*</span></label>
                                           <input
                                              type="number" min="0" name="experienceYears" value={formData.experienceYears} onChange={handleInputChange}
                                              className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all shadow-inner"

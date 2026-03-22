@@ -162,7 +162,7 @@ function CustomerProfile() {
                  >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                        <div className="space-y-2">
-                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Legal Identity Name</label>
+                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Legal Identity Name <span className="text-red-500 ml-0.5">*</span></label>
                           <input
                             type="text" name="name" value={formData.name} onChange={handleInputChange}
                             className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all placeholder:text-slate-300 shadow-inner"
@@ -176,14 +176,14 @@ function CustomerProfile() {
                           />
                        </div>
                        <div className="space-y-2">
-                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Contact Backbone (Phone)</label>
+                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Contact Backbone (Phone) <span className="text-red-500 ml-0.5">*</span></label>
                           <input
                             type="tel" name="phone" value={formData.phone} onChange={handleInputChange}
                             className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all placeholder:text-slate-300 shadow-inner"
                           />
                        </div>
                        <div className="space-y-2">
-                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Active Territory (State)</label>
+                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Active Territory (State) <span className="text-red-500 ml-0.5">*</span></label>
                           <input
                             type="text" name="state" value={formData.state} onChange={handleInputChange}
                             className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all placeholder:text-slate-300 shadow-inner"
