@@ -10,9 +10,10 @@ The platform demonstrates a **real-world marketplace architecture** with authent
 ---
 
 ## Logo 
-![KaamOnClick Logo](public/LOGO.png)
 
---
+![KaamOnClick Logo](frontend/vite-project/src/assets/LOGO.png)
+
+---
 
 ## ✨ Core Features
 
