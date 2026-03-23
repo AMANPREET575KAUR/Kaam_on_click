@@ -1,6 +1,15 @@
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Plus, Briefcase, Eye, User, Settings, Gavel } from "lucide-react";
+import {
+  LayoutDashboard,
+  Plus,
+  Briefcase,
+  Eye,
+  User,
+  Settings,
+  Gavel,
+} from "lucide-react";
 import { motion } from "framer-motion";
+import logo from "../assets/logo.png"; // ✅ IMPORT YOUR LOGO
 
 function Sidebar() {
   const location = useLocation();
@@ -19,17 +28,27 @@ function Sidebar() {
     { path: "/my-profile", label: "My Profile", icon: User },
   ];
 
-  const navItems = userRole === "CUSTOMER" ? customerNavItems : providerNavItems;
+  const navItems =
+    userRole === "CUSTOMER" ? customerNavItems : providerNavItems;
 
   return (
     <aside className="hidden lg:flex w-72 h-screen bg-white border-r border-slate-100 flex-col fixed left-0 top-0 z-50 shadow-sm">
+      
       {/* Brand Header */}
       <div className="p-8 pb-10">
         <Link to="/dashboard" className="flex items-center gap-4 group">
-          <div className="w-11 h-11 rounded-2xl bg-slate-950 flex items-center justify-center shadow-premium relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
-            <span className="text-white font-black text-2xl relative z-10 antialiased tracking-tighter font-['Outfit']">K</span>
-            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-primary-500/20 to-transparent" />
-          </div>
+          
+          <div className="w-14 h-14 rounded-2xl bg-slate-950 flex items-center justify-center shadow-premium relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
+  
+  <img
+    src={logo}
+    alt="Logo"
+    className="w-12 h-12 object-contain z-12"
+  />
+
+  <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-primary-500/20 to-transparent" />
+</div>
+
           <div className="flex flex-col">
             <span className="text-slate-950 font-black text-xl tracking-tight leading-none mb-1.5 uppercase antialiased font-['Outfit']">
               KaamOnClick
@@ -37,7 +56,7 @@ function Sidebar() {
             <div className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">
-                {userRole || 'Member'}
+                {userRole || "Member"}
               </span>
             </div>
           </div>
@@ -58,13 +77,19 @@ function Sidebar() {
                   : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
               }`}
             >
-              <div className={`transition-colors duration-300 ${isActive ? "text-primary-600" : "text-slate-400 group-hover:text-slate-600"}`}>
+              <div
+                className={`transition-colors duration-300 ${
+                  isActive
+                    ? "text-primary-600"
+                    : "text-slate-400 group-hover:text-slate-600"
+                }`}
+              >
                 <Icon size={20} strokeWidth={isActive ? 2.5 : 1.5} />
               </div>
               <span className="tracking-tight">{label}</span>
-              
+
               {isActive && (
-                <motion.div 
+                <motion.div
                   layoutId="sidebar-active-pill"
                   className="absolute right-4 w-1.5 h-1.5 rounded-full bg-primary-600 shadow-lg shadow-primary-500/50"
                 />
@@ -85,7 +110,12 @@ function Sidebar() {
                 : "text-slate-500 hover:text-slate-900"
             }`}
           >
-            <Settings size={20} strokeWidth={location.pathname === "/settings" ? 2.5 : 1.5} />
+            <Settings
+              size={20}
+              strokeWidth={
+                location.pathname === "/settings" ? 2.5 : 1.5
+              }
+            />
             <span className="tracking-tight">Settings</span>
           </Link>
         </div>

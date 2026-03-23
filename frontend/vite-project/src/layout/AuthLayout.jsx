@@ -1,29 +1,43 @@
 import { motion } from "framer-motion";
-import { Zap, Shield, Users, CheckCircle2 } from "lucide-react";
+import { Zap, Shield, Users } from "lucide-react";
+import logoK from "../assets/LOGO.png";
 
 function AuthLayout({ children }) {
   return (
     <div className="min-h-screen flex bg-slate-50 font-['Outfit'] selection:bg-primary-100 selection:text-primary-900">
+      
       {/* ─── Left branded panel ─── */}
       <div className="hidden lg:flex lg:w-[46%] relative bg-slate-950 overflow-hidden">
-        {/* Animated Background Gradients */}
+        
+        {/* Background effects */}
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary-600/20 blur-[120px] rounded-full animate-pulse" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-accent-600/20 blur-[120px] rounded-full animate-pulse" />
         
-        {/* Subtle Mesh Pattern */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+        <div 
+          className="absolute inset-0 opacity-[0.03]" 
+          style={{ 
+            backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', 
+            backgroundSize: '32px 32px' 
+          }} 
+        />
 
-        {/* Panel content */}
+        {/* Content */}
         <div className="relative z-10 flex flex-col justify-between p-16 xl:p-24 w-full">
+          
           {/* Logo */}
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-4"
           >
-            <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center shadow-premium ring-4 ring-white/10">
-              <span className="text-primary-600 font-extrabold text-2xl tracking-tighter">K</span>
+            <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center overflow-hidden shadow-lg">
+              <img 
+                src={logoK} 
+                alt="K Logo" 
+                className="w-full h-full object-contain"
+              />
             </div>
+
             <span className="text-white font-bold text-2xl tracking-tight">
               KaamOnClick
             </span>
@@ -38,14 +52,18 @@ function AuthLayout({ children }) {
             >
               <h1 className="text-5xl xl:text-7xl font-bold text-white leading-[1.05] tracking-tight mb-8">
                 One Tap.<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-accent-400 font-bold">Problem Gone.</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-accent-400">
+                  Problem Gone.
+                </span>
               </h1>
+
               <p className="text-lg text-slate-400 leading-relaxed font-light mb-12">
-                India's premiere platform for verified professional services. Excellence at your doorstep, in minutes.
+                India's premiere platform for verified professional services. 
+                Excellence at your doorstep, in minutes.
               </p>
             </motion.div>
 
-            {/* Premium Feature list */}
+            {/* Features */}
             <div className="space-y-6">
               {[
                 { icon: Zap, text: "Instant booking & real-time tracking", color: "text-amber-400" },
@@ -62,7 +80,10 @@ function AuthLayout({ children }) {
                   <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-white/10 transition-colors">
                     <Icon size={20} className={color} />
                   </div>
-                  <span className="text-slate-300 font-medium">{text}</span>
+
+                  <span className="text-slate-300 font-medium">
+                    {text}
+                  </span>
                 </motion.div>
               ))}
             </div>
@@ -77,25 +98,37 @@ function AuthLayout({ children }) {
           >
             <div className="flex -space-x-2">
               {[1, 2, 3].map(i => (
-                <div key={i} className="w-6 h-6 rounded-full border-2 border-slate-900 bg-slate-800" />
+                <div 
+                  key={i} 
+                  className="w-6 h-6 rounded-full border-2 border-slate-900 bg-slate-800" 
+                />
               ))}
             </div>
-            <span className="text-sm text-slate-400 font-medium">Trusted by 50,000+ users</span>
+
+            <span className="text-sm text-slate-400 font-medium">
+              Trusted by 50,000+ users
+            </span>
           </motion.div>
         </div>
       </div>
 
-      {/* ─── Right form panel ─── */}
+      {/* ─── Right panel ─── */}
       <div className="flex-1 bg-white flex items-center justify-center p-8 sm:p-12 lg:p-16 min-h-screen relative overflow-hidden">
-        {/* Decorative background element for mobile/tablet */}
+        
         <div className="lg:hidden absolute top-[-10%] right-[-10%] w-64 h-64 bg-primary-100/50 blur-[100px] rounded-full" />
         
         <div className="w-full max-w-[440px] relative z-10">
-          {/* Mobile-only logo */}
+          
+          {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-3 mb-12">
-            <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-xl">K</span>
+            <div className="w-12 h-12 rounded-xl bg-primary-600/10 backdrop-blur-md border border-primary-200/20 flex items-center justify-center overflow-hidden shadow-md">
+              <img 
+                src={logoK} 
+                alt="K Logo" 
+                className="w-full h-full object-contain"
+              />
             </div>
+
             <span className="text-slate-900 font-bold text-xl tracking-tight">
               KaamOnClick
             </span>

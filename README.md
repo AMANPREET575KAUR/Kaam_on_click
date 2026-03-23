@@ -9,6 +9,11 @@ The platform demonstrates a **real-world marketplace architecture** with authent
 
 ---
 
+## Logo 
+![KaamOnClick Logo](public/LOGO.png)
+
+--
+
 ## ✨ Core Features
 
 🔐 **Authentication System**
