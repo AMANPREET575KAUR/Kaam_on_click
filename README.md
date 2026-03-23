@@ -12,7 +12,7 @@ The platform demonstrates a **real-world marketplace architecture** with authent
 ## Logo 
 ![KaamOnClick Logo](src/assets/LOGO.png)
 
---
+---
 
 ## ✨ Core Features
 
