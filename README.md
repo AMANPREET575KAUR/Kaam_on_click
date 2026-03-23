@@ -11,7 +11,11 @@ The platform demonstrates a **real-world marketplace architecture** with authent
 
 ## Logo 
 
-![KaamOnClick Logo](frontend/vite-project/src/assets/LOGO.png)
+<p align="center">
+  <img src="frontend/vite-project/src/assets/LOGO.png" width="200"/>
+</p>
+
+<h3 align="center">KaamOnClick</h3>
 
 ---
 
