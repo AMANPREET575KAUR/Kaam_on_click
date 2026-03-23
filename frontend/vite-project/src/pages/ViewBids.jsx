@@ -481,9 +481,15 @@ function ViewBids() {
           >
             <motion.div 
               initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="bg-white rounded-[3rem] w-full max-w-md p-10 overflow-hidden shadow-2xl"
+              className="bg-white rounded-[3rem] w-full max-w-md p-10 overflow-hidden shadow-2xl relative"
               onClick={(e) => e.stopPropagation()}
             >
+              <button
+                onClick={() => setReviewModal(null)}
+                className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition-colors"
+              >
+                <X size={24} />
+              </button>
               <div className="mb-10 text-center">
                  <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-[1.5rem] flex items-center justify-center mx-auto mb-6">
                     <CheckCircle2 size={32} strokeWidth={2.5} />
