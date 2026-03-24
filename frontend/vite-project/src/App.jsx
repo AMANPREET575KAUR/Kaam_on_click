@@ -12,6 +12,7 @@ import CustomerProfile from "./pages/CustomerProfile";
 import Settings from "./pages/Settings";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
+import ForgotPassword from "./auth/ForgotPassword";
 import ProtectedRoute from "./components/protectedRoutes";
 import CompleteCustomerProfile from "./pages/CompleteCustomerProfile";
 import CompleteProviderProfile from "./pages/CompleteProviderProfile";
@@ -27,6 +28,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         <Route
           path="/complete-profile"

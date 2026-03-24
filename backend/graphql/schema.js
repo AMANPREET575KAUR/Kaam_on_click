@@ -128,6 +128,12 @@ type Mutation {
   role: String
  ): AuthPayload
 
+ resetPassword(
+  email: String
+  role: String
+  newPassword: String
+ ): User
+
  completeCustomerProfile(
   phone: String
   address: String
