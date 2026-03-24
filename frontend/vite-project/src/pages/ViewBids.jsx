@@ -243,6 +243,14 @@ function ViewBids() {
                              <CheckCircle2 size={14} className="text-emerald-500" />
                           </div>
                           <p className="text-sm font-bold text-slate-900 leading-tight mb-4">{job.description}</p>
+                          {job.assignedProvider && (
+                             <button
+                               onClick={() => viewProfile(job.assignedProvider.id)}
+                               className="mb-4 w-full py-2.5 rounded-xl border border-slate-100 text-[10px] font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
+                             >
+                               <User size={14} /> View Provider Profile
+                             </button>
+                          )}
                           {job.review && (
                              <div className="flex items-center gap-1">
                                 {[...Array(5)].map((_, i) => (
