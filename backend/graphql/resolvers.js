@@ -20,6 +20,35 @@ const resolvers = {
   return await authController.login(args);
  },
 
+ resetPassword: async (args) => {
+  const bcrypt = require("bcrypt");
+  const email = (args.email || "").trim().toLowerCase();
+  const role = (args.role || "").trim().toUpperCase();
+  const newPassword = args.newPassword || "";
+
+  if (!email || !role || !newPassword) {
+   throw new Error("Email, role, and new password are required");
+  }
+
+  if (!["CUSTOMER", "PROVIDER"].includes(role)) {
+   throw new Error("Invalid role. Use CUSTOMER or PROVIDER");
+  }
+
+  if (newPassword.length < 6) {
+   throw new Error("Password must be at least 6 characters long");
+  }
+
+  const user = await User.findOne({ where: { email, role } });
+  if (!user) {
+   throw new Error("No account found with this email and role");
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  user.password = hashedPassword;
+  await user.save();
+  return user;
+ },
+
  // ─── Profile Completion ──────────────────────────────────────
 
  completeCustomerProfile: async (args, context) => {

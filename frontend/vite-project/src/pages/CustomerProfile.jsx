@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import config from "../config";
 import DashboardLayout from "../layout/DashboardLayout";
-import { User, Mail, Phone, MapPin, Briefcase, Camera, Edit3, X, Check, ShieldCheck, Sparkles, Loader2, Globe, Shield } from "lucide-react";
+import { User, Mail, Phone, MapPin, Edit3, X, Check, ShieldCheck, Sparkles, Loader2, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 function CustomerProfile() {
@@ -106,18 +106,6 @@ function CustomerProfile() {
                      </span>
                   </div>
                </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-[2.5rem] p-8 text-white shadow-xl relative overflow-hidden">
-                <div className="absolute top-[-20%] left-[-20%] w-32 h-32 bg-white/10 blur-3xl rounded-full" />
-                <h3 className="text-lg font-black mb-4 flex items-center gap-2">
-                   <Shield size={20} className="text-indigo-200" />
-                   Security Portal
-                </h3>
-                <p className="text-indigo-100 text-xs font-medium leading-relaxed mb-6">
-                   Your biometric and identity data is protected by enterprise-grade 256-bit encryption.
-                </p>
-                <button className="w-full bg-white/10 hover:bg-white/20 border border-white/20 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all backdrop-blur-sm">Reset Security Key</button>
             </div>
           </div>
 
