@@ -6,6 +6,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, ArrowRight, User, Briefcase, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+
 function Login() {
   const navigate = useNavigate();
 
@@ -169,9 +170,18 @@ function Login() {
               <label className="block text-sm font-semibold text-slate-700">
                 Password
               </label>
+
+              
               <Link to="/forgot-password" className="text-xs font-bold text-primary-600 hover:text-primary-700">
+
                 Forgot password?
-              </Link>
+              </Link> */}
+              <Link
+   to="/forgot-password"
+   className="text-blue-600 text-sm"
+>
+   Forgot password?
+</Link>
             </div>
             <div className="relative group/input">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/input:text-primary-500 transition-colors" size={20} />

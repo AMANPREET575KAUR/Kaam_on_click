@@ -16,6 +16,7 @@ import ForgotPassword from "./auth/ForgotPassword";
 import ProtectedRoute from "./components/protectedRoutes";
 import CompleteCustomerProfile from "./pages/CompleteCustomerProfile";
 import CompleteProviderProfile from "./pages/CompleteProviderProfile";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function CompleteProfileRouter() {
   const role = localStorage.getItem("userRole");
