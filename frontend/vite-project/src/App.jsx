@@ -15,6 +15,7 @@ import Register from "./auth/Register";
 import ProtectedRoute from "./components/protectedRoutes";
 import CompleteCustomerProfile from "./pages/CompleteCustomerProfile";
 import CompleteProviderProfile from "./pages/CompleteProviderProfile";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function CompleteProfileRouter() {
   const role = localStorage.getItem("userRole");
@@ -27,6 +28,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         <Route
           path="/complete-profile"
