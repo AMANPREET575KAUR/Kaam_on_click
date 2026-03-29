@@ -164,15 +164,37 @@ function ProviderProfile() {
       <UploadOptionsModal 
         isOpen={isOptionsOpen} 
         onClose={() => setIsOptionsOpen(false)} 
-        onTakePhoto={() => setIsCameraOpen(true)}
-        onChooseFromDevice={() => fileInputRef.current?.click()}
+        onTakePhoto={() => { setIsOptionsOpen(false); setIsCameraOpen(true); }}
+        onChooseFromDevice={() => { setIsOptionsOpen(false); fileInputRef.current?.click(); }}
       />
 
       <CameraCapture 
         isOpen={isCameraOpen} 
         onClose={() => setIsCameraOpen(false)} 
-        onCapture={handleCameraCapture}
+        onCapture={(dataUrl) => { handleCameraCapture(dataUrl); setIsCameraOpen(false); }}
       />
+
+      {/* Hidden file input for Choose from Device */}
+      <input
+         ref={fileInputRef}
+         type="file"
+         accept="image/*"
+         className="hidden"
+         onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) {
+               alert("Image must be less than 5MB");
+               return;
+            }
+            const reader = new FileReader();
+            reader.onloadend = () => {
+               setFormData((prev) => ({ ...prev, profilePicture: reader.result }));
+            };
+            reader.readAsDataURL(file);
+         }}
+      />
+
       <div className="max-w-7xl mx-auto pb-20">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
@@ -262,28 +284,14 @@ function ProviderProfile() {
                                           </span>
                                        )}
                                     </div>
-                                    <label className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-950 text-white rounded-2xl text-xs font-black uppercase tracking-widest cursor-pointer">
+                                    <button
+                                       type="button"
+                                       onClick={() => setIsOptionsOpen(true)}
+                                       className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-950 text-white rounded-2xl text-xs font-black uppercase tracking-widest cursor-pointer"
+                                    >
                                        <Camera size={14} />
                                        <span>Update Portrait</span>
-                                       <input
-                                          type="file"
-                                          accept="image/*"
-                                          className="hidden"
-                                          onChange={(e) => {
-                                             const file = e.target.files?.[0];
-                                             if (!file) return;
-                                             if (file.size > 5 * 1024 * 1024) {
-                                                alert("Image must be less than 5MB");
-                                                return;
-                                             }
-                                             const reader = new FileReader();
-                                             reader.onloadend = () => {
-                                                setFormData((prev) => ({ ...prev, profilePicture: reader.result }));
-                                             };
-                                             reader.readAsDataURL(file);
-                                          }}
-                                       />
-                                    </label>
+                                    </button>
                                </div>
 
                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
