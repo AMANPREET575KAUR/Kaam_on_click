@@ -371,6 +371,18 @@ CREATE TABLE users (
   updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
+=======
+## Logo 
+
+
+<p align="center">
+  <img src="frontend/vite-project/src/assets/LOGO.png" width="200"/>
+</p>
+
+
+---
+
+## ✨ Core Features
 
 #### `provider_profiles` Table
 ```sql
@@ -1096,12 +1108,12 @@ The platform supports the following service types:
 
 ### Development Team
 
-| Name | Role | Contact |
-|------|------|---------|
-| **Apoorva Verma** | Full Stack Developer | [GitHub](https://github.com) |
-| **Arjit Pandey** | Backend Developer | [GitHub](https://github.com) |
-| **Diya Khattar** | Frontend Developer | [GitHub](https://github.com) |
-| **Amanpreet Kaur** | UI/UX Designer | [GitHub](https://github.com) |
+| Name | Role | 
+|------|------|
+| **Apoorva Verma** | Backend Developer | 
+| **Arjit Pandey** | Backend Developer | 
+| **Diya Khattar** | Frontend Developer | 
+| **Amanpreet Kaur** | Frontend Developer |
 
 ---
 
