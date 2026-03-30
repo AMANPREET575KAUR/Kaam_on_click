@@ -52,7 +52,7 @@ function CompleteProviderProfile() {
 
         setPhone(data.phone || "");
         setState(data.state || "");
-        setCity(data.profile?.city || "");
+        setCity("");
         setExperienceYears(data.profile?.experienceYears ? String(data.profile.experienceYears) : "");
         setDescription(data.profile?.description || "");
         setProfilePicture(data.profile?.profilePicture || "");
