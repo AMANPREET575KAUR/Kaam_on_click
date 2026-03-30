@@ -371,17 +371,6 @@ CREATE TABLE users (
   updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
-## Logo 
-
-
-<p align="center">
-  <img src="frontend/vite-project/src/assets/LOGO.png" width="200"/>
-</p>
-
-
----
-
-## ✨ Core Features
 
 #### `provider_profiles` Table
 ```sql
