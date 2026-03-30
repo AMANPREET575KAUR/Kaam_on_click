@@ -39,28 +39,33 @@ const CameraCapture = ({ isOpen, onClose, onCapture }) => {
 
       video.srcObject = stream;
 
-      video.onloadeddata = () => {
-        video.play().catch(() => { });
+      video.onloadedmetadata = () => {
+        video.play().catch(() => {});
         setIsInitializing(false);
       };
 
-      // fallback safety (prevents stuck loader)
-      const timeout = setTimeout(() => {
-        setIsInitializing(false);
-      }, 1500);
-
-      return () => clearTimeout(timeout);
+      return () => {
+        if (video) {
+          video.srcObject = null;
+        }
+      };
     }
   }, [stream]);
 
-  // 🛑 Stop Camera
+  // 🛑 Stop Camera (FIXED)
   const stopCamera = () => {
     if (stream) {
       stream.getTracks().forEach((track) => track.stop());
-      setStream(null);
     }
+
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+
+    setStream(null);
   };
 
+  // Handle modal open/close
   useEffect(() => {
     if (isOpen) {
       startCamera();
@@ -72,7 +77,7 @@ const CameraCapture = ({ isOpen, onClose, onCapture }) => {
     return () => stopCamera();
   }, [isOpen]);
 
-  // 📸 Capture Photo
+  // 📸 Capture Photo (DO NOT stop camera here → smoother UX)
   const handleCapture = () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
@@ -96,10 +101,19 @@ const CameraCapture = ({ isOpen, onClose, onCapture }) => {
     setCapturedImage(dataUrl);
   };
 
+  // 🔁 Retake (MAIN FIX)
   const handleRetake = () => {
     setCapturedImage(null);
+
+    // Fully reset camera
+    stopCamera();
+
+    setTimeout(() => {
+      startCamera();
+    }, 200); // important delay
   };
 
+  // ✅ Confirm
   const handleConfirm = () => {
     onCapture(capturedImage);
     onClose();
@@ -136,11 +150,11 @@ const CameraCapture = ({ isOpen, onClose, onCapture }) => {
               playsInline
               muted
               className="w-full h-full object-cover"
-              style={{ transform: "scaleX(-1)" }} // mirror effect
+              style={{ transform: "scaleX(-1)" }}
             />
           )}
 
-          {/* LOADER OVERLAY */}
+          {/* LOADER */}
           {isInitializing && !error && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50/80 backdrop-blur-sm">
               <div className="w-8 h-8 border-4 border-primary-100 border-t-primary-500 rounded-full animate-spin mb-4" />
@@ -150,7 +164,7 @@ const CameraCapture = ({ isOpen, onClose, onCapture }) => {
             </div>
           )}
 
-          {/* CAPTURED IMAGE */}
+          {/* IMAGE */}
           {capturedImage && (
             <img
               src={capturedImage}
