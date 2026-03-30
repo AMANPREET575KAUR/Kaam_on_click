@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Phone, Camera, MapPin, Building2, Clock, Wrench, FileText, ArrowRight } from "lucide-react";
@@ -8,6 +8,9 @@ import { motion } from "framer-motion";
 function CompleteProviderProfile() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
+  const PROVIDER_PROFILE_DRAFT_KEY = `providerProfileDraft:${userId || "unknown"}`;
+  const PROVIDER_PROFILE_DRAFT_PHOTO_KEY = `providerProfileDraftPhoto:${userId || "unknown"}`;
 
   const [phone, setPhone] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
@@ -18,6 +21,56 @@ function CompleteProviderProfile() {
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const savedDraft = localStorage.getItem(PROVIDER_PROFILE_DRAFT_KEY);
+    if (!savedDraft) return;
+
+    try {
+      const draft = JSON.parse(savedDraft);
+      setPhone(draft.phone || "");
+      setExperienceYears(draft.experienceYears || "");
+      setServices(Array.isArray(draft.services) ? draft.services : []);
+      setCity(draft.city || "");
+      setState(draft.state || "");
+      setDescription(draft.description || "");
+
+      const savedDraftPhoto = localStorage.getItem(PROVIDER_PROFILE_DRAFT_PHOTO_KEY);
+      if (savedDraftPhoto) setProfilePicture(savedDraftPhoto);
+    } catch (e) {
+      localStorage.removeItem(PROVIDER_PROFILE_DRAFT_KEY);
+      localStorage.removeItem(PROVIDER_PROFILE_DRAFT_PHOTO_KEY);
+    }
+  }, []);
+
+  useEffect(() => {
+    const draft = {
+      phone,
+      experienceYears,
+      services,
+      city,
+      state,
+      description,
+    };
+
+    try {
+      localStorage.setItem(PROVIDER_PROFILE_DRAFT_KEY, JSON.stringify(draft));
+    } catch (e) {
+      // Ignore storage errors and keep form usable.
+    }
+
+    if (!profilePicture) {
+      localStorage.removeItem(PROVIDER_PROFILE_DRAFT_PHOTO_KEY);
+      return;
+    }
+
+    try {
+      localStorage.setItem(PROVIDER_PROFILE_DRAFT_PHOTO_KEY, profilePicture);
+    } catch (e) {
+      // If photo is too large, keep text draft and skip image persistence.
+      localStorage.removeItem(PROVIDER_PROFILE_DRAFT_PHOTO_KEY);
+    }
+  }, [phone, profilePicture, experienceYears, services, city, state, description]);
 
   const servicesList = [
     "Plumbing", "Electrician", "Cleaning", "Carpenter",
@@ -67,6 +120,8 @@ function CompleteProviderProfile() {
       );
 
       localStorage.setItem("profileCompleted", "true");
+      localStorage.removeItem(PROVIDER_PROFILE_DRAFT_KEY);
+      localStorage.removeItem(PROVIDER_PROFILE_DRAFT_PHOTO_KEY);
       navigate("/dashboard");
     } catch (err) {
       const errorMessage = err.response?.data?.errors?.[0]?.message || "Failed to complete profile";

@@ -12,6 +12,9 @@ function CompleteProviderProfile() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const fileInputRef = useRef(null);
+  const userId = localStorage.getItem("userId");
+  const PROVIDER_PROFILE_DRAFT_KEY = `providerProfileDraft:${userId || "unknown"}`;
+  const PROVIDER_PROFILE_DRAFT_PHOTO_KEY = `providerProfileDraftPhoto:${userId || "unknown"}`;
 
   const [phone, setPhone] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
@@ -30,6 +33,26 @@ function CompleteProviderProfile() {
     const fetchExistingProviderDetails = async () => {
       const userId = localStorage.getItem("userId");
       if (!token || !userId) return;
+
+      const savedDraft = localStorage.getItem(PROVIDER_PROFILE_DRAFT_KEY);
+      if (savedDraft) {
+        try {
+          const draft = JSON.parse(savedDraft);
+          setPhone(draft.phone || "");
+          setExperienceYears(draft.experienceYears || "");
+          setServices(Array.isArray(draft.services) ? draft.services : []);
+          setCity(draft.city || "");
+          setState(draft.state || "");
+          setDescription(draft.description || "");
+
+          const savedDraftPhoto = localStorage.getItem(PROVIDER_PROFILE_DRAFT_PHOTO_KEY);
+          if (savedDraftPhoto) setProfilePicture(savedDraftPhoto);
+          return;
+        } catch (e) {
+          localStorage.removeItem(PROVIDER_PROFILE_DRAFT_KEY);
+          localStorage.removeItem(PROVIDER_PROFILE_DRAFT_PHOTO_KEY);
+        }
+      }
 
       const query = `{
         providerProfile(userId: ${userId}) {
@@ -52,7 +75,7 @@ function CompleteProviderProfile() {
 
         setPhone(data.phone || "");
         setState(data.state || "");
-        setCity(data.profile?.city || "");
+        setCity("");
         setExperienceYears(data.profile?.experienceYears ? String(data.profile.experienceYears) : "");
         setDescription(data.profile?.description || "");
         setProfilePicture(data.profile?.profilePicture || "");
@@ -68,6 +91,35 @@ function CompleteProviderProfile() {
 
     fetchExistingProviderDetails();
   }, [token]);
+
+  useEffect(() => {
+    const draft = {
+      phone,
+      experienceYears,
+      services,
+      city,
+      state,
+      description,
+    };
+
+    try {
+      localStorage.setItem(PROVIDER_PROFILE_DRAFT_KEY, JSON.stringify(draft));
+    } catch (e) {
+      // Ignore storage errors and keep form functional.
+    }
+
+    if (!profilePicture) {
+      localStorage.removeItem(PROVIDER_PROFILE_DRAFT_PHOTO_KEY);
+      return;
+    }
+
+    try {
+      localStorage.setItem(PROVIDER_PROFILE_DRAFT_PHOTO_KEY, profilePicture);
+    } catch (e) {
+      // If photo is too large, keep text draft and skip image persistence.
+      localStorage.removeItem(PROVIDER_PROFILE_DRAFT_PHOTO_KEY);
+    }
+  }, [phone, profilePicture, experienceYears, services, city, state, description]);
 
   const servicesList = ["Plumbing", "Electrician", "Cleaning", "Carpenter", "Painter", "AC Repair", "Appliance Repair"];
 
@@ -112,6 +164,8 @@ function CompleteProviderProfile() {
       `;
       await axios.post(config.API_URL, { query: mutation }, { headers: { authorization: token } });
       localStorage.setItem("profileCompleted", "true");
+      localStorage.removeItem(PROVIDER_PROFILE_DRAFT_KEY);
+      localStorage.removeItem(PROVIDER_PROFILE_DRAFT_PHOTO_KEY);
       navigate("/dashboard");
     } catch (err) {
       setError(err.response?.data?.errors?.[0]?.message || "Failed to complete profile");

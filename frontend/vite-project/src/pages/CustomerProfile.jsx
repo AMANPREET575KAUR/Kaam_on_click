@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import config from "../config";
 import DashboardLayout from "../layout/DashboardLayout";
-import { User, Mail, Phone, MapPin, Edit3, X, Check, ShieldCheck, Sparkles, Loader2, Globe } from "lucide-react";
+import { User, Mail, Phone, MapPin, Edit3, X, Check, ShieldCheck, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 function CustomerProfile() {
   const [profile, setProfile] = useState(null);
+  const [stats, setStats] = useState({ totalJobs: 0, totalBids: 0 });
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", state: "" });
@@ -16,11 +17,19 @@ function CustomerProfile() {
     const token = localStorage.getItem("token");
     const query = `{
       customerProfile(userId: ${userId}) { id name email phone state role }
+      dashboardStats { totalJobs totalBids }
     }`;
     try {
       const res = await axios.post(config.API_URL, { query }, { headers: { authorization: token } });
-      setProfile(res.data.data.customerProfile);
-      setFormData(res.data.data.customerProfile);
+      const customerProfile = res.data?.data?.customerProfile;
+      const dashboardStats = res.data?.data?.dashboardStats;
+
+      setProfile(customerProfile);
+      setFormData(customerProfile);
+      setStats({
+        totalJobs: dashboardStats?.totalJobs || 0,
+        totalBids: dashboardStats?.totalBids || 0,
+      });
     } catch (error) { console.log(error); } finally { setIsLoading(false); }
   };
 
@@ -94,16 +103,16 @@ function CustomerProfile() {
                
                <div className="p-8 space-y-4">
                   <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Account Status</span>
-                     <span className="flex items-center gap-1.5 text-[10px] font-black text-emerald-500 uppercase tracking-widest">
-                        <Check size={14} strokeWidth={3} /> Active
-                     </span>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Jobs Posted</span>
+                  <span className="text-xs font-black text-slate-900 uppercase tracking-widest">
+                    {stats.totalJobs}
+                  </span>
                   </div>
                   <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Trust Level</span>
-                     <span className="flex items-center gap-1.5 text-[10px] font-black text-primary-500 uppercase tracking-widest">
-                        <Sparkles size={14} strokeWidth={3} /> Elite
-                     </span>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Bids Received</span>
+                  <span className="text-xs font-black text-primary-600 uppercase tracking-widest">
+                    {stats.totalBids}
+                  </span>
                   </div>
                </div>
             </div>
@@ -136,12 +145,6 @@ function CustomerProfile() {
                           </div>
                        </div>
                     ))}
-                    
-                    <div className="md:col-span-2 bg-slate-100/50 border border-dashed border-slate-200 rounded-[2.5rem] p-10 flex flex-col items-center justify-center text-center">
-                       <Globe size={40} className="text-slate-300 mb-4" />
-                       <h4 className="text-lg font-black text-slate-900 mb-1 uppercase tracking-tight">Global Connectivity</h4>
-                       <p className="text-slate-500 text-sm font-medium max-w-sm">Your profile is visible to 5,000+ top-tier service providers across the network.</p>
-                    </div>
                  </motion.div>
               ) : (
                  <motion.div 
