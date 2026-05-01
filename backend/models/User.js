@@ -18,8 +18,9 @@ const User = sequelize.define("User", {
  },
 
  role: {
-  type: DataTypes.ENUM("CUSTOMER", "PROVIDER")
- },
+  type: DataTypes.ENUM("CUSTOMER", "PROVIDER", "ADMIN"),
+  allowNull: false
+},
 
  state: {
   type: DataTypes.STRING
@@ -69,6 +70,18 @@ const User = sequelize.define("User", {
   type: DataTypes.BOOLEAN,
   defaultValue: true
  },
+ isVerified: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+otp: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  otpExpiresAt: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
 
  // Privacy settings
  isPublic: {

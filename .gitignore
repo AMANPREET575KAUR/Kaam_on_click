@@ -6,10 +6,15 @@ node_modules/
 dist/
 build/
 
-# Environment variables
-# .env
+# Environment variables — ✅ FIXED (removed the # before .env)
+.env
+**/.env
 .env.local
 .env.*.local
+
+# Firebase private key — ✅ NEW
+serviceAccountKey.json
+**/serviceAccountKey.json
 
 # Logs
 npm-debug.log*

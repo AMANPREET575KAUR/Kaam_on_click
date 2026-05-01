@@ -20,11 +20,31 @@ type User {
  isPublic: Boolean
  language: String
  timezone: String
+ isVerified: Boolean
 }
 
 type AuthPayload {
  token: String
  user: User
+}
+
+type OtpResponse {
+ success: Boolean!
+ message: String!
+}
+
+# ✅ NEW — Assigned Job type
+type AssignedJob {
+ jobId: ID
+ serviceType: String
+ customerName: String
+ customerEmail: String
+ providerName: String
+ providerEmail: String
+ providerSkills: String
+ status: String
+ city: String
+ date: String
 }
 
 type Job {
@@ -88,6 +108,78 @@ type ReviewInfo {
  createdAt: String
 }
 
+type AdminStats {
+ totalUsers: Int
+ totalProviders: Int
+ totalJobs: Int
+ totalBids: Int
+}
+
+type AdminUser {
+ id: ID
+ name: String
+ email: String
+ isVerified: Boolean
+ createdAt: String
+}
+
+type AdminProvider {
+ id: ID
+ name: String
+ email: String
+ skills: String
+ rating: Float
+ isVerified: Boolean
+ createdAt: String
+}
+
+type DashboardStats {
+ totalJobs: Int
+ openJobs: Int
+ assignedJobs: Int
+ completedJobs: Int
+ totalBids: Int
+ pendingBids: Int
+ acceptedBids: Int
+ recentJobs: [Job]
+ recentBids: [BidWithJob]
+}
+
+type Bid {
+ id: ID
+ jobId: ID
+ bidPrice: Int
+ message: String
+ status: String
+ UserId: ID
+}
+
+type BidWithProvider {
+ id: ID
+ jobId: ID
+ bidPrice: Int
+ message: String
+ status: String
+ provider: ProviderInfo
+}
+
+type BidWithJob {
+ id: ID
+ jobId: ID
+ bidPrice: Int
+ message: String
+ status: String
+ job: Job
+}
+
+type ProviderReview {
+ id: ID
+ rating: Int
+ comment: String
+ jobServiceType: String
+ createdAt: String
+}
+
 type Query {
  hello: String
  jobs(serviceType: String): [Job]
@@ -99,6 +191,12 @@ type Query {
  customerProfile(userId: ID): CustomerInfo
  newJobsForProvider: [Job]
  providerReviews(providerId: ID): [ProviderReview]
+
+ # Admin Queries
+ adminStats: AdminStats
+ adminAllUsers: [AdminUser]
+ adminAllProviders: [AdminProvider]
+ adminAssignedJobs: [AssignedJob]
 }
 
 type Mutation {
@@ -127,6 +225,9 @@ type Mutation {
   password: String
   role: String
  ): AuthPayload
+
+ verifyOtp(email: String!, otp: String!): OtpResponse
+ resendOtp(email: String!): OtpResponse
 
  completeCustomerProfile(
   phone: String
@@ -217,53 +318,6 @@ type Mutation {
   currentPassword: String
   newPassword: String
  ): User
-}
-
-type Bid {
- id: ID
- jobId: ID
- bidPrice: Int
- message: String
- status: String
- UserId: ID
-}
-
-type BidWithProvider {
- id: ID
- jobId: ID
- bidPrice: Int
- message: String
- status: String
- provider: ProviderInfo
-}
-
-type BidWithJob {
- id: ID
- jobId: ID
- bidPrice: Int
- message: String
- status: String
- job: Job
-}
-
-type ProviderReview {
- id: ID
- rating: Int
- comment: String
- jobServiceType: String
- createdAt: String
-}
-
-type DashboardStats {
- totalJobs: Int
- openJobs: Int
- assignedJobs: Int
- completedJobs: Int
- totalBids: Int
- pendingBids: Int
- acceptedBids: Int
- recentJobs: [Job]
- recentBids: [BidWithJob]
 }
 
 `);

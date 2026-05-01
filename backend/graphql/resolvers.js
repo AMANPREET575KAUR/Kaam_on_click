@@ -2,6 +2,12 @@ const authController = require("../controllers/authController");
 const { Job, Bid, User, ProviderProfile, Review } = require("../models");
 const { Op } = require("sequelize");
 
+// ✅ OTP imports
+const { sendOTPEmail } = require("../utils/mailer");
+const { generateOTP } = require("../utils/otp");
+
+const { notifyProviders } = require("../utils/firebase");
+
 const resolvers = {
 
  hello: () => {
@@ -13,11 +19,61 @@ const resolvers = {
  },
 
  registerProvider: async (args) => {
-  return await authController.registerProvider(args);
+  const user = await authController.registerProvider(args);
+
+  try {
+   const otp = generateOTP();
+   const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+   await User.update(
+    { otp, otpExpiresAt },
+    { where: { id: user.id } }
+   );
+
+   await sendOTPEmail(user.email, otp, user.name);
+   console.log(`✅ OTP sent to ${user.email}`);
+  } catch (err) {
+   console.error("❌ Failed to send OTP:", err.message);
+  }
+
+  return user;
  },
 
  login: async (args) => {
   return await authController.login(args);
+ },
+
+ verifyOtp: async (args) => {
+  const { email, otp } = args;
+
+  const user = await User.findOne({ where: { email } });
+  if (!user) throw new Error("User not found");
+  if (!user.otp) throw new Error("No OTP was requested for this account");
+  if (new Date() > new Date(user.otpExpiresAt)) throw new Error("OTP has expired. Please request a new one");
+  if (user.otp !== otp) throw new Error("Invalid OTP. Please try again");
+
+  await User.update(
+   { isVerified: true, otp: null, otpExpiresAt: null },
+   { where: { email } }
+  );
+
+  return { success: true, message: "Email verified successfully! You can now login." };
+ },
+
+ resendOtp: async (args) => {
+  const { email } = args;
+
+  const user = await User.findOne({ where: { email } });
+  if (!user) throw new Error("User not found");
+  if (user.isVerified) throw new Error("This account is already verified");
+
+  const otp = generateOTP();
+  const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+  await User.update({ otp, otpExpiresAt }, { where: { email } });
+  await sendOTPEmail(email, otp, user.name);
+
+  return { success: true, message: "New OTP sent to your email" };
  },
 
  // ─── Profile Completion ──────────────────────────────────────
@@ -47,7 +103,6 @@ const resolvers = {
   const user = await User.findByPk(context.user.id, { include: [ProviderProfile] });
   if (!user) throw new Error("User not found");
 
-  // Mandatory fields
   if (!args.phone) throw new Error("Phone number is required");
   if (!args.profilePicture) throw new Error("Profile picture is required");
   if (args.experienceYears === undefined || args.experienceYears === null) throw new Error("Experience years is required");
@@ -57,7 +112,6 @@ const resolvers = {
   user.profileCompleted = true;
   await user.save();
 
-  // Update provider profile
   if (user.ProviderProfile) {
    user.ProviderProfile.profilePicture = args.profilePicture;
    user.ProviderProfile.experienceYears = args.experienceYears;
@@ -96,6 +150,13 @@ const resolvers = {
    date: args.date ? new Date(args.date) : null,
    UserId: context.user.id
   });
+   try {
+   await notifyProviders(job);
+  } catch (err) {
+   console.error("Firebase notify failed:", err.message);
+  }
+
+  
 
   const result = job.toJSON();
   result.date = job.date ? job.date.toISOString() : null;
@@ -185,7 +246,6 @@ const resolvers = {
   const currentUser = await User.findByPk(context.user.id);
   if (!currentUser) throw new Error("User not found");
 
-  // Jobs posted in the last 24 hours in provider's state
   const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
   const jobs = await Job.findAll({
@@ -247,7 +307,6 @@ const resolvers = {
   if (!job) throw new Error("Job not found");
   if (job.status !== "OPEN") throw new Error("Cannot cancel bid after job has been assigned");
 
-  // 24-hour cancellation rule
   if (job.date) {
    const jobDate = new Date(job.date);
    const now = new Date();
@@ -268,12 +327,7 @@ const resolvers = {
 
   const bids = await Bid.findAll({
    where: { JobId: args.jobId },
-   include: [
-    {
-     model: User,
-     include: [ProviderProfile]
-    }
-   ]
+   include: [{ model: User, include: [ProviderProfile] }]
   });
 
   return bids.map(bid => ({
@@ -307,12 +361,10 @@ const resolvers = {
   if (job.UserId !== context.user.id) throw new Error("You can only select bids for your own jobs");
   if (job.status !== "OPEN") throw new Error("A provider has already been selected for this job");
 
-  // Assign the job
   job.status = "ASSIGNED";
   job.assignedTo = bid.UserId;
   await job.save();
 
-  // Accept selected bid, reject all others
   bid.status = "ACCEPTED";
   await bid.save();
 
@@ -340,11 +392,9 @@ const resolvers = {
    throw new Error("Rating must be between 1 and 5");
   }
 
-  // Mark job completed
   job.status = "COMPLETED";
   await job.save();
 
-  // Create review
   await Review.create({
    rating: args.rating,
    comment: args.comment || "",
@@ -353,7 +403,6 @@ const resolvers = {
    providerId: job.assignedTo
   });
 
-  // Update provider's average rating
   const providerProfile = await ProviderProfile.findOne({
    include: [{ model: User, where: { id: job.assignedTo } }]
   });
@@ -390,16 +439,12 @@ const resolvers = {
  // ─── Profiles ────────────────────────────────────────────────
 
  providerProfile: async (args, context) => {
-  const user = await User.findByPk(args.userId, {
-   include: [ProviderProfile]
-  });
+  const user = await User.findByPk(args.userId, { include: [ProviderProfile] });
 
   if (!user || user.role !== "PROVIDER") throw new Error("Provider not found");
 
   const isOwnProfile = context.user && String(context.user.id) === String(args.userId);
-  if (!user.isPublic && !isOwnProfile) {
-   throw new Error("This profile is private");
-  }
+  if (!user.isPublic && !isOwnProfile) throw new Error("This profile is private");
 
   return {
    id: user.id,
@@ -419,9 +464,7 @@ const resolvers = {
   if (!user || user.role !== "CUSTOMER") throw new Error("Customer not found");
 
   const isOwnProfile = context.user && String(context.user.id) === String(args.userId);
-  if (!user.isPublic && !isOwnProfile) {
-   throw new Error("This profile is private");
-  }
+  if (!user.isPublic && !isOwnProfile) throw new Error("This profile is private");
 
   return {
    id: user.id,
@@ -609,7 +652,6 @@ const resolvers = {
     recentBids: []
    };
   } else {
-   // PROVIDER
    const bids = await Bid.findAll({
     where: { UserId: context.user.id },
     include: [{ model: Job }],
@@ -637,6 +679,120 @@ const resolvers = {
     }))
    };
   }
+ },
+
+ // ─── Admin Queries ────────────────────────────────────────────
+
+ adminStats: async (args, context) => {
+  const adminToken = context.req?.headers?.["admin-token"];
+  if (!adminToken) throw new Error("Admin access required");
+  const jwt = require("jsonwebtoken");
+  try { jwt.verify(adminToken, process.env.ADMIN_JWT_SECRET); }
+  catch { throw new Error("Invalid admin token"); }
+
+  const totalUsers     = await User.count({ where: { role: "CUSTOMER" } });
+  const totalProviders = await User.count({ where: { role: "PROVIDER" } });
+  const totalJobs      = await Job.count();
+  const totalBids      = await Bid.count();
+
+  return { totalUsers, totalProviders, totalJobs, totalBids };
+ },
+
+ adminAllUsers: async (args, context) => {
+  const adminToken = context.req?.headers?.["admin-token"];
+  if (!adminToken) throw new Error("Admin access required");
+  const jwt = require("jsonwebtoken");
+  try { jwt.verify(adminToken, process.env.ADMIN_JWT_SECRET); }
+  catch { throw new Error("Invalid admin token"); }
+
+  const users = await User.findAll({
+   where: { role: "CUSTOMER" },
+   order: [["createdAt", "DESC"]]
+  });
+
+  return users.map(u => ({
+   id: u.id,
+   name: u.name,
+   email: u.email,
+   isVerified: u.isVerified,
+   createdAt: u.createdAt ? u.createdAt.toISOString() : null
+  }));
+ },
+
+ adminAllProviders: async (args, context) => {
+  const adminToken = context.req?.headers?.["admin-token"];
+  if (!adminToken) throw new Error("Admin access required");
+  const jwt = require("jsonwebtoken");
+  try { jwt.verify(adminToken, process.env.ADMIN_JWT_SECRET); }
+  catch { throw new Error("Invalid admin token"); }
+
+  const providers = await User.findAll({
+   where: { role: "PROVIDER" },
+   include: [{ model: ProviderProfile }],
+   order: [["createdAt", "DESC"]]
+  });
+
+  return providers.map(u => ({
+   id: u.id,
+   name: u.name,
+   email: u.email,
+   isVerified: u.isVerified,
+   skills: u.ProviderProfile?.services || "—",
+   rating: u.ProviderProfile?.rating || 0,
+   createdAt: u.createdAt ? u.createdAt.toISOString() : null
+  }));
+ },
+
+ // ✅ NEW — Admin Assigned Jobs
+ adminAssignedJobs: async (args, context) => {
+  const adminToken = context.req?.headers?.["admin-token"];
+  if (!adminToken) throw new Error("Admin access required");
+  const jwt = require("jsonwebtoken");
+  try { jwt.verify(adminToken, process.env.ADMIN_JWT_SECRET); }
+  catch { throw new Error("Invalid admin token"); }
+
+  // Fetch all jobs that have been assigned, in progress or completed
+  const jobs = await Job.findAll({
+   where: {
+    status: { [Op.in]: ["ASSIGNED", "IN_PROGRESS", "COMPLETED"] }
+   },
+   include: [
+    // Customer who created the job
+    { model: User },
+    // Accepted bid with provider details
+    {
+     model: Bid,
+     where: { status: "ACCEPTED" },
+     required: false,
+     include: [
+      {
+       model: User,
+       include: [ProviderProfile]
+      }
+     ]
+    }
+   ],
+   order: [["createdAt", "DESC"]]
+  });
+
+  return jobs.map(job => {
+   const acceptedBid = job.Bids?.[0];
+   const provider    = acceptedBid?.User;
+   const customer    = job.User;
+
+   return {
+    jobId:          job.id,
+    serviceType:    job.serviceType || "—",
+    customerName:   customer?.name  || "—",
+    customerEmail:  customer?.email || "—",
+    providerName:   provider?.name  || "—",
+    providerEmail:  provider?.email || "—",
+    providerSkills: provider?.ProviderProfile?.services || "—",
+    status:         job.status,
+    city:           job.city  || "—",
+    date:           job.date  ? job.date.toISOString() : null
+   };
+  });
  }
 
 };

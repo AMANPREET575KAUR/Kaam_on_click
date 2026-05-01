@@ -7,14 +7,18 @@ const jwt = require("jsonwebtoken");
 
 const schema = require("./graphql/schema");
 const resolvers = require("./graphql/resolvers");
+const providerRoutes = require('./routes/providerRoutes');
 
 const { sequelize } = require("./models");
 
 const app = express();
 
+// ✅ FIXED — cors and json MUST come before routes
 app.use(cors());
-// Allow larger GraphQL JSON bodies (for base64 profile pictures)
 app.use(express.json({ limit: "5mb" }));
+
+// ✅ FIXED — routes after middleware
+app.use('/api/provider', providerRoutes);
 
 const ensureUserRoleCompositeUnique = async () => {
   const queryInterface = sequelize.getQueryInterface();
@@ -22,7 +26,6 @@ const ensureUserRoleCompositeUnique = async () => {
   try {
     const indexes = await queryInterface.showIndex("Users");
 
-    // Remove stale unique index on email-only from older schema versions.
     for (const index of indexes) {
       const fieldNames = (index.fields || []).map((field) => field.attribute || field.name);
       const isEmailOnlyUnique = index.unique && fieldNames.length === 1 && fieldNames[0] === "email";
@@ -53,15 +56,13 @@ app.get("/", (req, res) => {
   res.send("KaamOnClick Backend Running");
 });
 
-/* GraphQL API */
-
 app.use(
   "/graphql",
   graphqlHTTP((req) => {
     let user = null;
-    
+
     const token = req.headers.authorization;
-    
+
     if (token) {
       try {
         user = jwt.verify(token, process.env.JWT_SECRET);
@@ -74,12 +75,10 @@ app.use(
       schema: schema,
       rootValue: resolvers,
       graphiql: true,
-      context: { user }
+      context: { user, req }  // ✅ FIXED — added req to context for admin resolvers
     };
   })
 );
-
-/* Database */
 
 sequelize.sync({ alter: true }).then(async () => {
   await ensureUserRoleCompositeUnique();

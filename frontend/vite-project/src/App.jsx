@@ -16,10 +16,27 @@ import ProtectedRoute from "./components/protectedRoutes";
 import CompleteCustomerProfile from "./pages/CompleteCustomerProfile";
 import CompleteProviderProfile from "./pages/CompleteProviderProfile";
 
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminProviders from "./pages/AdminProviders";
+import AdminUsers from "./pages/AdminUsers";
+
+import VerifyOtp from "./pages/VerifyOtp";
+
+
 function CompleteProfileRouter() {
   const role = localStorage.getItem("userRole");
   return role === "PROVIDER" ? <CompleteProviderProfile /> : <CompleteCustomerProfile />;
 }
+function AdminRoute({ children }) {
+  const token = localStorage.getItem("adminToken");
+  if (!token) {
+    window.location.href = "/admin/login";
+    return null;
+  }
+  return children;
+}
+
 
 function App() {
   return (
@@ -28,6 +45,32 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/providers"
+          element={
+            <AdminRoute>
+              <AdminProviders />
+            </AdminRoute>
+          }
+        />
+        <Route
+  path="/admin/users"
+  element={
+    <AdminRoute>
+      <AdminUsers />
+    </AdminRoute>
+  }
+/>
+<Route path="/verify-otp" element={<VerifyOtp />} />
         <Route
           path="/complete-profile"
           element={
